@@ -8,85 +8,8 @@ from collections import defaultdict
 import numpy as np
 from functools import cached_property
 from typing import List, Tuple, Dict
-# from kana_const import HIRAGANAS, KATAKANAS, DAKUON_MAP, DAKUON_REV_MAP
-
-HIRAGANAS = (
-    ('あ', 'い', 'う', 'え', 'お'),
-    ('か', 'き', 'く', 'け', 'こ'),
-    ('さ', 'し', 'す', 'せ', 'そ'),
-    ('た', 'ち', 'つ', 'て', 'と'),
-    ('な', 'に', 'ぬ', 'ね', 'の'),
-    ('は', 'ひ', 'ふ', 'へ', 'ほ'),
-    ('ま', 'み', 'む', 'め', 'も'),
-    ('や', None, 'ゆ', None, 'よ'),
-    ('ら', 'り', 'る', 'れ', 'ろ'),
-    ('わ', 'ゐ', None, 'ゑ', 'を'),
-    ('が', 'ぎ', 'ぐ', 'げ', 'ご'),
-    ('ざ', 'じ', 'ず', 'ぜ', 'ぞ'),
-    ('だ', 'ぢ', 'づ', 'で', 'ど'),
-    ('ば', 'び', 'ぶ', 'べ', 'ぼ'),
-    ('ぱ', 'ぴ', 'ぷ', 'ぺ', 'ぽ'),
-)
-
-HIRA_SPECIAL_READINGS = {
-    'ぢ': 'じ',
-    'づ': 'ず',
-}
-KATA_SPECIAL_READINGS = {
-    'ヂ': 'ジ',
-    'ヅ': 'ズ',
-}
-
-HIRA_HATSUON = 'ん'
-KATA_HATSUON = 'ン'
-
-KATAKANAS = (
-    ('ア', 'イ', 'ウ', 'エ', 'オ'),
-    ('カ', 'キ', 'ク', 'ケ', 'コ'),
-    ('サ', 'シ', 'ス', 'セ', 'ソ'),
-    ('タ', 'チ', 'ツ', 'テ', 'ト'),
-    ('ナ', 'ニ', 'ヌ', 'ネ', 'ノ'),
-    ('ハ', 'ヒ', 'フ', 'ヘ', 'ホ'),
-    ('マ', 'ミ', 'ム', 'メ', 'モ'),
-    ('ヤ', None, 'ユ', None, 'ヨ'),
-    ('ラ', 'リ', 'ル', 'レ', 'ロ'),
-    ('ワ', 'ヰ', None, 'ヱ', 'ヲ'),
-    ('ガ', 'ギ', 'グ', 'ゲ', 'ゴ'),
-    ('ザ', 'ジ', 'ズ', 'ゼ', 'ゾ'),
-    ('ダ', 'ヂ', 'ヅ', 'デ', 'ド'),
-    ('バ', 'ビ', 'ブ', 'ベ', 'ボ'),
-    ('パ', 'ピ', 'プ', 'ペ', 'ポ'),
-)
-
-
-HIRA_YOUON_MAP = {
-    'ゃ': 'や', 
-    'ゅ': 'ゆ', 
-    'ょ': 'よ',
-}
-KATA_YOUON_MAP = {
-    'ャ': 'や', 
-    'ュ': 'ゆ', 
-    'ョ': 'よ',
-}
-HIRA_ADD_YOUONS = ('ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ')
-KATA_ADD_YOUONS = ('ァ', 'ィ', 'ゥ', 'ェ', 'ォ')
-HIRA_SOKUON = 'っ'
-KATA_SOKUON = 'ッ'
-
-
-DAKUON_MAP = {
-    'か': 'が',
-    'さ': 'ざ',
-    'た': 'だ',
-    'は': 'ば',
-}
-DAKUON_REV_MAP = dict(map(reversed, DAKUON_MAP.items()))
-
-HANDAKUON_MAP = {
-    'は': 'ぱ'
-}
-HanDAKUON_REV_MAP = dict(map(reversed, HANDAKUON_MAP.items()))
+import const
+# from const import HIRAGANAS, KATAKANAS, const.DAKUON_MAP, DAKUON_REV_MAP, HIRA_SPECIAL_READINGS, KATA_SPECIAL_READINGS, HIRA_HATSUON
 
 
 class JapaneseCharacter:
@@ -174,9 +97,9 @@ class Gyou(BaseKana):
 
     def __init__(self, symbol: str) -> None:
         self.symbol = symbol
-        self._is_dakuon = symbol in DAKUON_REV_MAP
+        self._is_dakuon = symbol in const.DAKUON_REV_MAP
         self._has_youon = False
-        self._dakuon = DAKUON_MAP.get(self.symbol, self.symbol)
+        self._dakuon = const.DAKUON_MAP.get(self.symbol, self.symbol)
 
     def __repr__(self) -> str:
         return f"Gyou<{self.symbol}>"
@@ -184,6 +107,10 @@ class Gyou(BaseKana):
     @property
     def dakuon(self) -> Kana:
         return kana_dict[self._dakuon]
+
+    def __eq__(self, other) -> bool:
+        # TODO: is this enough?
+        return isinstance(other, Gyou) and other.symbol == self.symbol
 
     # def generate_hiragana(self, hiragana_symbol: str, katakana_symbol: str, dan: Dan) -> Hiragana:
     #     return Hiragana(kana_symbol=hiragana_symbol, katakana_symbol=katakana_symbol, gyou=self, dan=dan)
@@ -194,7 +121,8 @@ class Hiragana(Kana):
     def __init__(self, kana_symbol: str, katakana_symbol: str, gyou: Gyou, dan: Dan) -> None:
         super().__init__(kana_symbol, gyou=gyou, dan=dan)
         self._katakana = katakana_symbol
-        self._pron_str = HIRA_SPECIAL_READINGS.get(self.symbol, self.symbol)
+        self._pron_str = const.HIRA_SPECIAL_READINGS.get(
+            self.symbol, self.symbol)
         self._gyoudan_dict_index = 0
 
     @property
@@ -210,7 +138,8 @@ class Katakana(Kana):
     def __init__(self, kana_symbol: str, hiragana_symbol: str, gyou: Gyou, dan: Dan) -> None:
         super().__init__(kana_symbol, gyou=gyou, dan=dan)
         self._hiragana = hiragana_symbol
-        self._pron_str = KATA_SPECIAL_READINGS.get(self.symbol, self.symbol)
+        self._pron_str = const.KATA_SPECIAL_READINGS.get(
+            self.symbol, self.symbol)
         self._gyoudan_dict_index = 1
 
     @property
@@ -225,8 +154,8 @@ class KanaParser:
     pass
 
 
-hiraganas = np.array(HIRAGANAS)
-katakanas = np.array(KATAKANAS)
+hiraganas = np.array(const.HIRAGANAS)
+katakanas = np.array(const.KATAKANAS)
 print(hiraganas.shape)
 print(katakanas.shape)
 assert hiraganas.shape == katakanas.shape
@@ -254,12 +183,12 @@ for i in range(m):
                                katakana.dan.symbol)].append(katakana)
 
 for kana in kana_dict.values():
-    if kana.gyou in DAKUON_MAP:
+    if kana.gyou.symbol in const.DAKUON_MAP:
         kana._is_dakuon = False
-        for dakuon_kana in kana_gyoudan_dict[(DAKUON_MAP[kana.gyou], kana.dan)]:
+        for dakuon_kana in kana_gyoudan_dict[(const.DAKUON_MAP[kana.gyou.symbol], kana.dan)]:
             if isinstance(dakuon_kana, type(kana)):
                 kana._dakuon = dakuon_kana
-    elif kana.gyou in DAKUON_REV_MAP:
+    elif kana.gyou.symbol in const.DAKUON_REV_MAP:
         kana._is_dakuon = True
         kana._dakuon = kana
     else:
@@ -274,17 +203,35 @@ for kana in kana_dict.values():
 NONE_GYOU = Gyou(symbol='None')
 NONE_DAN = Dan(symbol='None')
 
-kana_dict[HIRA_HATSUON] = Hiragana(
-    kana_symbol=HIRA_HATSUON, katakana_symbol=KATA_HATSUON, gyou=NONE_GYOU, dan=NONE_DAN)
+kana_dict[const.HIRA_HATSUON] = Hiragana(
+    kana_symbol=const.HIRA_HATSUON, katakana_symbol=const.KATA_HATSUON, gyou=NONE_GYOU, dan=NONE_DAN)
 
-kana_dict[KATA_HATSUON] = Katakana(
-    kana_symbol=KATA_HATSUON, hiragana_symbol=HIRA_HATSUON, gyou=NONE_GYOU, dan=NONE_DAN)
+kana_dict[const.KATA_HATSUON] = Katakana(
+    kana_symbol=const.KATA_HATSUON, hiragana_symbol=const.HIRA_HATSUON, gyou=NONE_GYOU, dan=NONE_DAN)
 
 # final constants needed for other use
 
 KANA_DICT = kana_dict
-SUTEGANAS = tuple(HIRA_YOUON_MAP.keys()) + HIRA_ADD_YOUONS + tuple(KATA_YOUON_MAP.keys()) + KATA_ADD_YOUONS
+SUTEGANAS = tuple(const.HIRA_YOUON_MAP.keys()) + const.HIRA_ADD_YOUONS + \
+    tuple(const.KATA_YOUON_MAP.keys()) + const.KATA_ADD_YOUONS
 
-def str2kana(string: str) -> Kana:
-    # TODO: protect dict
-    pass
+nn = KANA_DICT['ん']
+print(nn.dan)
+print(nn.gyou)
+print(nn.symbol)
+print(nn.pron)
+# print(nn.hatsuon)
+
+
+def char2kana(char: str) -> Kana:
+    assert len(char) == 1
+    return KANA_DICT[char]
+
+
+def analyze_bikana(bikana_str: str) -> Kana:
+    assert len(bikana_str) == 2
+    head, vowel = bikana_str
+    # TODO: note katakana and hiragana
+    assert head in KANA_DICT
+    head_kana = KANA_DICT[head] if head in const.abnormal_katakanas else KANA_DICT[head].dan
+    return Kana(symbol=bikana_str, gyou=Gyou(symbol=head_kana), dan=Dan(symbol=dan_kana))
