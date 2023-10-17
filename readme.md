@@ -13,15 +13,15 @@ This package/repository uses the [JMdict/EDICT](https://www.edrdg.org/wiki/index
 [Remark: did not finish the original task plan on 2023.10.17, and the tentative deadline postpones to 2023.10.19 11:00 p.m. CST. One of the reasons of publishing this is, the repository may be never finished in 2023 without a formal publishment as motivation :(]
 
 TODO List: (1-3: best before 2023.10.20)
-- [] *youon* (拗音) and *gairaigo*-only syllabaries problem
-- [] Settle down design of KanaStr
-- [] Settle down design of *kanji*s based on kanjidic2 of the KANJIDIC project
-- [] DP save all possible furiganas of words
-- [] Treatment for corner cases of pronunciation
-- [] Data reader support for the previously used corpus (https://github.com/ndl-lab/huriganacorpus-ndlbib)
-- [] A simple and ugly interface
-- [] Illustration of application: ruby generation for items of Korean-Japanese dictionary (https://korean.dict.naver.com/kojadict/)
-- [] Basic Testings using Pytest
+- [ ] *youon* (拗音) and *gairaigo*-only syllabaries problem
+- [ ] Settle down design of KanaStr
+- [ ] Settle down design of *kanji*s based on kanjidic2 of the KANJIDIC project
+- [ ] DP save all possible furiganas of words
+- [ ] Treatment for corner cases of pronunciation
+- [ ] Data reader support for the previously used corpus (https://github.com/ndl-lab/huriganacorpus-ndlbib)
+- [ ] A simple and ugly interface
+- [ ] Illustration of application: ruby generation for items of Korean-Japanese dictionary (https://korean.dict.naver.com/kojadict/)
+- [ ] Basic Testings using Pytest
 
 ---
 
