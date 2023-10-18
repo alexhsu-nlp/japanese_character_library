@@ -30,8 +30,45 @@ class TestKanaDict:
         assert kana_a.dan.pron == 'い'
         assert kana_a.gyou.pron == 'た'
 
-    def test_katakana_su(self):
-        pass
+    def test_hiragana_su(self):
+        kana_a = self.kana_dict['す']
+        assert kana_a.dakuon.pron == 'ず'
+        assert kana_a.dan.pron == 'う'
+        assert kana_a.gyou.pron == 'さ'
+
+    def test_hiragana_si(self):
+        kana_a = self.kana_dict['し']
+        assert kana_a.dakuon.pron == 'じ'
+        assert kana_a.dan.pron == 'い'
+        assert kana_a.gyou.pron == 'さ'
+
+    def test_hiragana_tu(self):
+        kana_a = self.kana_dict['つ']
+        assert kana_a.dakuon.pron == 'ず'
+        assert kana_a.dan.pron == 'う'
+        assert kana_a.gyou.pron == 'た'
+
+    def test_hiragana_wo(self):
+        kana_a = self.kana_dict['を']
+        assert kana_a.dakuon.pron == 'お'
+        assert kana_a.dan.pron == 'お'
+        assert kana_a.gyou.pron == 'わ'
+
+    def test_hiragana_nn(self):
+        kana_a = self.kana_dict['ん']
+        # TODO: should I make a pronunciation class?
+        # TODO: how to treat these Nones
+        assert kana_a.dakuon.pron == 'None'
+        assert kana_a.dan.pron == 'None'
+        assert kana_a.gyou.pron == 'None'
+
+    def test_sutegana(self):
+        kana_a = self.kana_dict['ん']
+        # TODO: should I make a pronunciation class?
+        # TODO: how to treat these Nones
+        assert kana_a.dakuon.pron == 'None'
+        assert kana_a.dan.pron == 'None'
+        assert kana_a.gyou.pron == 'None'
 
 
 class TestKanaStr:

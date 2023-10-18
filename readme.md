@@ -22,7 +22,9 @@ TODO List: (1-3: best before 2023.10.20)
 - [ ] A simple and ugly interface
 - [ ] Illustration of application: ruby generation for items of Korean-Japanese dictionary (https://korean.dict.naver.com/kojadict/)
 - [ ] Basic Testings using Pytest
-
+- [ ] Incorporate the old Japanese *kana* style (歴史的仮名遣い)
+- [ ] Iteraiton marks (踊り字): 々, ゝ, ゞ, ヽ, ヾ 
+- [ ] List of common special symbols: 〆 (しめ), ゟ (より), ヿ (こと), 〇 (れい), and the problem of ヵ/ヶ.
 ---
 
 Other Reference websites:
@@ -32,3 +34,7 @@ https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai/ind
 https://r12a.github.io/scripts/jpan/ja.html
 
 https://en.wikipedia.org/wiki/Katakana#Extended_katakana
+
+https://ja.wikipedia.org/wiki/%E6%8D%A8%E3%81%A6%E4%BB%AE%E5%90%8D
+
+https://ja.wikipedia.org/wiki/%E8%B8%8A%E3%82%8A%E5%AD%97
