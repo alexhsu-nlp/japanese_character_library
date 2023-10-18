@@ -225,7 +225,8 @@ char_dict["ヵ"] = KanjiYomi(kanji="ヵ", onyomis=[], kunyomis=['か'], nanoris=
 char_dict["〆"] = KanjiYomi(kanji="〆", onyomis=[], kunyomis=['しめ'], nanoris=[])
 char_dict["-"] = KanjiYomi(kanji="-", onyomis=[], kunyomis=[], nanoris=[])
 char_dict["-"].valid_yomis.add("-")
-char_dict["〇"] = KanjiYomi(kanji="〇", onyomis=['じゅう'], kunyomis=['まる'], nanoris=[])
+char_dict["〇"] = KanjiYomi(kanji="〇", onyomis=['じゅう'],
+                           kunyomis=['まる'], nanoris=[])
 char_dict["别"] = KanjiYomi(kanji="别", onyomis=['べつ'], kunyomis=[], nanoris=[])
 char_dict["宫"] = KanjiYomi(kanji="宫", onyomis=['きゅう'], kunyomis=[], nanoris=[])
 char_dict["边"] = KanjiYomi(kanji="边", onyomis=['へん'], kunyomis=[], nanoris=[])
