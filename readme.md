@@ -39,3 +39,5 @@ https://en.wikipedia.org/wiki/Katakana#Extended_katakana
 https://ja.wikipedia.org/wiki/%E6%8D%A8%E3%81%A6%E4%BB%AE%E5%90%8D
 
 https://ja.wikipedia.org/wiki/%E8%B8%8A%E3%82%8A%E5%AD%97
+
+https://www.youtube.com/watch?v=A-zL6VuJbjc

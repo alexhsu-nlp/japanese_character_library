@@ -2,8 +2,10 @@
 """
 Python file for gojuuon (五十音) information.
 """
+from typing import Tuple, Optional, Dict
+
 # pay attention to checking "he"
-HIRAGANAS = (
+HIRAGANAS: Tuple[Tuple[Optional[str], ...]] = (
     ('あ', 'い', 'う', 'え', 'お'),
     ('か', 'き', 'く', 'け', 'こ'),
     ('さ', 'し', 'す', 'せ', 'そ'),
@@ -21,7 +23,7 @@ HIRAGANAS = (
     ('ぱ', 'ぴ', 'ぷ', 'ぺ', 'ぽ'),
 )
 
-KATAKANAS = (
+KATAKANAS: Tuple[Tuple[Optional[str], ...]] = (
     ('ア', 'イ', 'ウ', 'エ', 'オ'),
     ('カ', 'キ', 'ク', 'ケ', 'コ'),
     ('サ', 'シ', 'ス', 'セ', 'ソ'),
@@ -40,21 +42,21 @@ KATAKANAS = (
 )
 
 # TODO: youons
-HEPBURN_PRONS = (
+HEPBURN_PRONS: Tuple[Tuple[str, ...]] = (
     ('a', 'i', 'u', 'e', 'o'),
     ('ka', 'ki', 'ku', 'ke', 'ko'),
     ('sa', 'shi', 'su', 'se', 'se'),
 )
 
 # Majority reading
-HIRA_SPECIAL_READINGS = {
+HIRA_SPECIAL_READINGS: Dict[str, str] = {
     'ぢ': 'じ',
     'づ': 'ず',
     'ゑ': 'え',
     'ゐ': 'い',
     'を': 'お',  # not always?
 }
-KATA_SPECIAL_READINGS = {
+KATA_SPECIAL_READINGS: Dict[str, str] = {
     'ヂ': 'ジ',
     'ヅ': 'ズ',
     'ヱ': 'エ',
@@ -62,27 +64,42 @@ KATA_SPECIAL_READINGS = {
     'ヲ': 'オ',
 }
 
-HIRA_HATSUON = 'ん'
-KATA_HATSUON = 'ン'
+HIRA_HATSUON: str = 'ん'
+KATA_HATSUON: str = 'ン'
 
 
-HIRA_YOUON_MAP = {
+# TODO: do I need to distinguish these two?
+HIRA_YOUON_MAP: Dict[str, str] = {
     'ゃ': 'や',
     'ゅ': 'ゆ',
     'ょ': 'よ',
 }
-KATA_YOUON_MAP = {
+KATA_YOUON_MAP: Dict[str, str] = {
     'ャ': 'や',
     'ュ': 'ゆ',
     'ョ': 'よ',
 }
-HIRA_ADD_YOUONS = ('ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ')
-KATA_ADD_YOUONS = ('ァ', 'ィ', 'ゥ', 'ェ', 'ォ')
-HIRA_SOKUON = 'っ'
-KATA_SOKUON = 'ッ'
+HIRA_ADD_YOUONS: Dict[str, str] = {
+    'ぁ': 'あ',
+    'ぃ': 'い',
+    'ぅ': 'う',
+    'ぇ': 'え',
+    'ぉ': 'お',
+}
+# ('ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ')
+KATA_ADD_YOUONS: Dict[str, str] = {
+    'ァ': 'ア',
+    'ィ': 'イ',
+    'ゥ': 'ウ',
+    'ェ': 'エ',
+    'ォ': 'オ',
+}
+# ('ァ', 'ィ', 'ゥ', 'ェ', 'ォ')
+HIRA_SOKUON: str = 'っ'
+KATA_SOKUON: str = 'ッ'
 
 
-DAKUON_MAP = {
+DAKUON_MAP: Dict[str, str] = {
     'か': 'が',
     # 'き': 'ぎ',
     # 'く': 'ぐ',
@@ -106,33 +123,33 @@ DAKUON_MAP = {
 }
 
 
-DAKUON_REV_MAP = dict(map(reversed, DAKUON_MAP.items()))
+DAKUON_REV_MAP: Dict[str, str] = dict(map(reversed, DAKUON_MAP.items()))
 
-HANDAKUON_MAP = {
+HANDAKUON_MAP: Dict[str, str] = {
     'は': 'ぱ'
 }
-HanDAKUON_REV_MAP = dict(map(reversed, HANDAKUON_MAP.items()))
+HanDAKUON_REV_MAP: Dict[str, str] = dict(map(reversed, HANDAKUON_MAP.items()))
 
 # https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai/honbun01.html, retrieved 2023.09.01
 # directly copied from the to avoid any misconstruction
 # TODO: mark specialty of ち, し, つ, ふ
-KATA_FOREIGN_YOUONS_TABLE1 = ('シェ',
-                              'チェ',
-                              'ツァ', 'ツェ', 'ツォ',
-                              'ティ',
-                              'ファ', 'フィ', 'フェ', 'フォ',
-                              'ジェ',
-                              'ディ', 'デュ')
-KATA_FOREIGN_YOUONS_TABLE2 = ('イェ',
-                              'ウィ', 'ウェ', 'ウォ',
-                              'クァ', 'クィ', 'クェ', 'クォ',
-                              'ツィ',
-                              'トゥ',
-                              'グァ',
-                              'ドゥ',
-                              'ヴァ', 'ヴィ', 'ヴ', 'ヴぇ', 'ヴォ',
-                              'テュ', 'フュ', 'ヴュ')
+KATA_FOREIGN_YOUON_KANAS_TABLE1: Tuple[str, ...] = ('シェ',
+                                                    'チェ',
+                                                    'ツァ', 'ツェ', 'ツォ',
+                                                    'ティ',
+                                                    'ファ', 'フィ', 'フェ', 'フォ',
+                                                    'ジェ',
+                                                    'ディ', 'デュ')
+KATA_FOREIGN_YOUON_KANAS_TABLE2: Tuple[str, ...] = ('イェ',
+                                                    'ウィ', 'ウェ', 'ウォ',
+                                                    'クァ', 'クィ', 'クェ', 'クォ',
+                                                    'ツィ',
+                                                    'トゥ',
+                                                    'グァ',
+                                                    'ドゥ',
+                                                    'ヴァ', 'ヴィ', 'ヴ', 'ヴぇ', 'ヴォ',
+                                                    'テュ', 'フュ', 'ヴュ')
 
-abnormal_katakanas = ('ヴ', 'ツ', 'フ', 'イ', 'ウ')
+abnormal_katakanas: Tuple[str, ...] = ('ヴ', 'ツ', 'フ', 'イ', 'ウ')
 
 # logic of construction: ???

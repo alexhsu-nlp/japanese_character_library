@@ -4,6 +4,8 @@ from functools import cached_property
 from typing import Union, List, Tuple, Dict, Sequence
 from kana import KANA_DICT, Hiragana, Katakana, Gyou, Dan, Kana, JapaneseCharacter, SUTEGANAS
 
+# TODO: incorporate Yomis into Kanjis
+
 
 def safetyinnerwrapper_str2kana(kana: Union[Kana, str]):
     if isinstance(kana, str):
