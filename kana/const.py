@@ -1,6 +1,6 @@
 
 """
-Python file for gojuuon information.
+Python file for gojuuon (五十音) information.
 """
 # pay attention to checking "he"
 HIRAGANAS = (

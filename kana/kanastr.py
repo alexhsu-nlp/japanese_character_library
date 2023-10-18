@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import cached_property
 from typing import Union, List, Tuple, Dict, Sequence
-import kanas
+from kana import kanas
 
 
 def safetyinnerwrapper_str2kana(kana_str: str) -> kanas.Kana:

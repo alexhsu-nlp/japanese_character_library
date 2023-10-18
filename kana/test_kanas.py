@@ -1,5 +1,5 @@
-import kanas
-import kanastr
+from kana import kanas
+from kana import kanastr
 
 # TODO: what do i want to achieve for this library?
 # 1. a sentence of kana in kana objects
@@ -9,11 +9,8 @@ import kanastr
 
 class TestKanaDict:
 
-    def __init__(self) -> None:
-        self.kana_dict = kanas.KANA_DICT
-
     def test_hiragana_a(self):
-        kana_a = self.kana_dict['あ']
+        kana_a = kanas.KANA_DICT['あ']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron == 'あ'
@@ -21,7 +18,7 @@ class TestKanaDict:
         assert kana_a.gyou.pron == 'あ'
 
     def test_hiragana_ka(self):
-        kana_a = self.kana_dict['か']
+        kana_a = kanas.KANA_DICT['か']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron == 'が'
@@ -29,7 +26,7 @@ class TestKanaDict:
         assert kana_a.gyou.pron == 'か'
 
     def test_hiragana_ti(self):
-        kana_a = self.kana_dict['ち']
+        kana_a = kanas.KANA_DICT['ち']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron == 'じ'
@@ -37,7 +34,7 @@ class TestKanaDict:
         assert kana_a.gyou.pron == 'た'
 
     def test_hiragana_su(self):
-        kana_a = self.kana_dict['す']
+        kana_a = kanas.KANA_DICT['す']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron == 'ず'
@@ -45,7 +42,7 @@ class TestKanaDict:
         assert kana_a.gyou.pron == 'さ'
 
     def test_hiragana_si(self):
-        kana_a = self.kana_dict['し']
+        kana_a = kanas.KANA_DICT['し']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron == 'じ'
@@ -53,7 +50,7 @@ class TestKanaDict:
         assert kana_a.gyou.pron == 'さ'
 
     def test_hiragana_tu(self):
-        kana_a = self.kana_dict['つ']
+        kana_a = kanas.KANA_DICT['つ']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron == 'ず'
@@ -61,7 +58,7 @@ class TestKanaDict:
         assert kana_a.gyou.pron == 'た'
 
     def test_hiragana_wo(self):
-        kana_a = self.kana_dict['を']
+        kana_a = kanas.KANA_DICT['を']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron == 'お'
@@ -69,7 +66,7 @@ class TestKanaDict:
         assert kana_a.gyou.pron == 'わ'
 
     def test_hiragana_nn(self):
-        kana_a = self.kana_dict['ん']
+        kana_a = kanas.KANA_DICT['ん']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         # TODO: should I make a pronunciation class?
@@ -79,7 +76,7 @@ class TestKanaDict:
         assert kana_a.gyou.pron == 'None'
 
     def test_sutegana_hira_sha(self):
-        kana_a = self.kana_dict['しゃ']
+        kana_a = kanas.KANA_DICT['しゃ']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron == 'じゃ'
@@ -88,7 +85,7 @@ class TestKanaDict:
         assert kana_a.gyou.pron == 'し'
 
     def test_sutegana_kata_she(self):
-        kana_a = self.kana_dict['シェ']
+        kana_a = kanas.KANA_DICT['シェ']
         assert not kana_a.is_hiragana()
         assert kana_a.is_katakana()
         assert kana_a.dakuon.pron == 'ジェ'
@@ -97,7 +94,7 @@ class TestKanaDict:
         assert kana_a.gyou.pron == 'さ'
 
     def test_sutegana_kata_kuo(self):
-        kana_a = self.kana_dict['クォ']
+        kana_a = kanas.KANA_DICT['クォ']
         assert not kana_a.is_hiragana()
         assert kana_a.is_katakana()
         # TODO: actually this dakuon does not exist
@@ -108,7 +105,7 @@ class TestKanaDict:
         assert kana_a.gyou.pron == 'く'
 
     def test_sutegana_kata_tsuo(self):
-        kana_a = self.kana_dict['ツォ']
+        kana_a = kanas.KANA_DICT['ツォ']
         assert not kana_a.is_hiragana()
         assert kana_a.is_katakana()
         # TODO: actually this dakuon does not exist
@@ -118,7 +115,7 @@ class TestKanaDict:
         assert kana_a.gyou.pron == 'つ'
 
     def test_sutegana_kata_fo(self):
-        kana_a = self.kana_dict['フォ']
+        kana_a = kanas.KANA_DICT['フォ']
         assert not kana_a.is_hiragana()
         assert kana_a.is_katakana()
         # TODO: actually this dakuon does not exist
@@ -129,7 +126,7 @@ class TestKanaDict:
         assert kana_a.gyou.pron == 'ふ'
 
     def test_sutegana_kata_deu(self):
-        kana_a = self.kana_dict['デュ']
+        kana_a = kanas.KANA_DICT['デュ']
         assert not kana_a.is_hiragana()
         assert kana_a.is_katakana()
         # TODO: actually this dakuon does not exist

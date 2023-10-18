@@ -8,7 +8,7 @@ from collections import defaultdict
 import numpy as np
 from functools import cached_property
 from typing import List, Tuple, Dict
-import const
+from kana import const
 # from const import HIRAGANAS, KATAKANAS, const.DAKUON_MAP, DAKUON_REV_MAP, HIRA_SPECIAL_READINGS, KATA_SPECIAL_READINGS, HIRA_HATSUON
 
 
