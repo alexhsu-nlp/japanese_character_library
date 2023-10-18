@@ -12,9 +12,10 @@ This package/repository uses the [JMdict/EDICT](https://www.edrdg.org/wiki/index
 
 [Remark: did not finish the original task plan on 2023.10.17, and the tentative deadline postpones to 2023.10.19 11:00 p.m. CST. One of the reasons of publishing this is, the repository may be never finished in 2023 without a formal publishment as motivation :(]
 
-TODO List: (1-3: best before 2023.10.20)
-- [ ] *youon* (拗音) and *gairaigo*-only syllabaries problem
-- [ ] Settle down design of KanaStr
+TODO List: (1-4: best before 2023.10.20)
+- [ ] *youon* (拗音) and *gairaigo*-only syllabaries problem (*sutegana* problem)
+- [ ] Analyzer for *sutegana*s as the basis for KanaStr
+- [ ] Settle down design of KanaStr: including primitive *kanji*s
 - [ ] Settle down design of *kanji*s based on kanjidic2 of the KANJIDIC project
 - [ ] DP save all possible furiganas of words
 - [ ] Treatment for corner cases of pronunciation
