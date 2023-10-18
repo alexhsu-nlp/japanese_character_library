@@ -13,124 +13,124 @@ class TestKanaDict:
         kana_a = kanas.KANA_DICT['あ']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
-        assert kana_a.dakuon.pron == 'あ'
-        assert kana_a.dan.pron == 'あ'
-        assert kana_a.gyou.pron == 'あ'
+        assert kana_a.dakuon.pron.symbol == 'あ'
+        assert kana_a.dan.symbol == 'あ'
+        assert kana_a.gyou.symbol == 'あ'
 
     def test_hiragana_ka(self):
         kana_a = kanas.KANA_DICT['か']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
-        assert kana_a.dakuon.pron == 'が'
-        assert kana_a.dan.pron == 'あ'
-        assert kana_a.gyou.pron == 'か'
+        assert kana_a.dakuon.pron.symbol == 'が'
+        assert kana_a.dan.symbol == 'あ'
+        assert kana_a.gyou.symbol == 'か'
 
     def test_hiragana_ti(self):
         kana_a = kanas.KANA_DICT['ち']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
-        assert kana_a.dakuon.pron == 'じ'
-        assert kana_a.dan.pron == 'い'
-        assert kana_a.gyou.pron == 'た'
+        assert kana_a.dakuon.pron.symbol == 'じ'
+        assert kana_a.dan.symbol == 'い'
+        assert kana_a.gyou.symbol == 'た'
 
     def test_hiragana_su(self):
         kana_a = kanas.KANA_DICT['す']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
-        assert kana_a.dakuon.pron == 'ず'
-        assert kana_a.dan.pron == 'う'
-        assert kana_a.gyou.pron == 'さ'
+        assert kana_a.dakuon.pron.symbol == 'ず'
+        assert kana_a.dan.symbol == 'う'
+        assert kana_a.gyou.symbol == 'さ'
 
     def test_hiragana_si(self):
         kana_a = kanas.KANA_DICT['し']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
-        assert kana_a.dakuon.pron == 'じ'
-        assert kana_a.dan.pron == 'い'
-        assert kana_a.gyou.pron == 'さ'
+        assert kana_a.dakuon.pron.symbol == 'じ'
+        assert kana_a.dan.symbol == 'い'
+        assert kana_a.gyou.symbol == 'さ'
 
     def test_hiragana_tu(self):
         kana_a = kanas.KANA_DICT['つ']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
-        assert kana_a.dakuon.pron == 'ず'
-        assert kana_a.dan.pron == 'う'
-        assert kana_a.gyou.pron == 'た'
+        assert kana_a.dakuon.pron.symbol == 'ず'
+        assert kana_a.dan.symbol == 'う'
+        assert kana_a.gyou.symbol == 'た'
 
     def test_hiragana_wo(self):
         kana_a = kanas.KANA_DICT['を']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
-        assert kana_a.dakuon.pron == 'お'
-        assert kana_a.dan.pron == 'お'
-        assert kana_a.gyou.pron == 'わ'
+        assert kana_a.dakuon.pron.symbol == 'お'
+        assert kana_a.dan.symbol == 'お'
+        assert kana_a.gyou.symbol == 'わ'
 
     def test_hiragana_nn(self):
         kana_a = kanas.KANA_DICT['ん']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
-        # TODO: should I make a pronunciation class?
+        # TODO: should I make a pron.symbolunciation class?
         # TODO: how to treat these Nones
-        assert kana_a.dakuon.pron == 'None'
-        assert kana_a.dan.pron == 'None'
-        assert kana_a.gyou.pron == 'None'
+        assert kana_a.dakuon.pron.symbol == 'None'
+        assert kana_a.dan.symbol == 'None'
+        assert kana_a.gyou.symbol == 'None'
 
     def test_sutegana_hira_sha(self):
         kana_a = kanas.KANA_DICT['しゃ']
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
-        assert kana_a.dakuon.pron == 'じゃ'
+        assert kana_a.dakuon.pron.symbol == 'じゃ'
         # TODO: is this dan assignment good?
-        assert kana_a.dan.pron == 'や'
-        assert kana_a.gyou.pron == 'し'
+        assert kana_a.dan.symbol == 'や'
+        assert kana_a.gyou.symbol == 'し'
 
     def test_sutegana_kata_she(self):
         kana_a = kanas.KANA_DICT['シェ']
         assert not kana_a.is_hiragana()
         assert kana_a.is_katakana()
-        assert kana_a.dakuon.pron == 'ジェ'
+        assert kana_a.dakuon.pron.symbol == 'ジェ'
         # TODO: is this dan assignment good?
-        assert kana_a.dan.pron == 'え'
-        assert kana_a.gyou.pron == 'さ'
+        assert kana_a.dan.symbol == 'え'
+        assert kana_a.gyou.symbol == 'さ'
 
     def test_sutegana_kata_kuo(self):
         kana_a = kanas.KANA_DICT['クォ']
         assert not kana_a.is_hiragana()
         assert kana_a.is_katakana()
         # TODO: actually this dakuon does not exist
-        assert kana_a.dakuon.pron == 'ぐぉ'
+        assert kana_a.dakuon.pron.symbol == 'ぐぉ'
         # TODO: is this dan and gyou assignment good?
         # reasoning: the gyou can distinguish the fact that they are foreign
-        assert kana_a.dan.pron == 'お'
-        assert kana_a.gyou.pron == 'く'
+        assert kana_a.dan.symbol == 'お'
+        assert kana_a.gyou.symbol == 'く'
 
     def test_sutegana_kata_tsuo(self):
         kana_a = kanas.KANA_DICT['ツォ']
         assert not kana_a.is_hiragana()
         assert kana_a.is_katakana()
         # TODO: actually this dakuon does not exist
-        assert kana_a.dakuon.pron == 'ずぉ'
+        assert kana_a.dakuon.pron.symbol == 'ずぉ'
         # TODO: is this dan and gyou assignment good?
-        assert kana_a.dan.pron == 'お'
-        assert kana_a.gyou.pron == 'つ'
+        assert kana_a.dan.symbol == 'お'
+        assert kana_a.gyou.symbol == 'つ'
 
     def test_sutegana_kata_fo(self):
         kana_a = kanas.KANA_DICT['フォ']
         assert not kana_a.is_hiragana()
         assert kana_a.is_katakana()
         # TODO: actually this dakuon does not exist
-        assert kana_a.dakuon.pron == 'ずぉ'
+        assert kana_a.dakuon.pron.symbol == 'ずぉ'
         # TODO: is this dan and gyou assignment good?
-        assert kana_a.dan.pron == 'お'
+        assert kana_a.dan.symbol == 'お'
         # shouldn't the gyou be ふ?
-        assert kana_a.gyou.pron == 'ふ'
+        assert kana_a.gyou.symbol == 'ふ'
 
     def test_sutegana_kata_deu(self):
         kana_a = kanas.KANA_DICT['デュ']
         assert not kana_a.is_hiragana()
         assert kana_a.is_katakana()
         # TODO: actually this dakuon does not exist
-        assert kana_a.dakuon.pron == 'でゅ'
+        assert kana_a.dakuon.pron.symbol == 'でゅ'
         # TODO: is this dan and gyou assignment good?
-        assert kana_a.dan.pron == 'ゆ'
-        assert kana_a.gyou.pron == 'で'
+        assert kana_a.dan.symbol == 'ゆ'
+        assert kana_a.gyou.symbol == 'で'

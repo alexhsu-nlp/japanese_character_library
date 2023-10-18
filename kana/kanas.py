@@ -211,7 +211,7 @@ kana_dict[const.KATA_HATSUON] = Katakana(
 
 # final constants needed for other use
 
-KANA_DICT = kana_dict
+KANA_DICT: Dict[str, Kana] = kana_dict
 SUTEGANAS = tuple(const.HIRA_YOUON_MAP.keys()) + const.HIRA_ADD_YOUONS + \
     tuple(const.KATA_YOUON_MAP.keys()) + const.KATA_ADD_YOUONS
 

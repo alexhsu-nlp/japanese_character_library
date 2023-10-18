@@ -57,6 +57,9 @@ HIRA_SPECIAL_READINGS = {
 KATA_SPECIAL_READINGS = {
     'ヂ': 'ジ',
     'ヅ': 'ズ',
+    'ヱ': 'エ',
+    'ヰ': 'イ',
+    'ヲ': 'オ',
 }
 
 HIRA_HATSUON = 'ん'
