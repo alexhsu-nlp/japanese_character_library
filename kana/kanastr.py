@@ -5,57 +5,55 @@ from typing import Union, List, Tuple, Dict, Sequence
 from kana import kanas
 
 
-def safetyinnerwrapper_str2kana(kana_str: str) -> kanas.Kana:
-    pass
+# def safetyinnerwrapper_str2kana(kana_str: str) -> kanas.Kana:
+#     pass
 
 
-class KanaStr:
+class SyllableStr:
     # TODO: frozen instance?
 
-    def __init__(self, kanas: Sequence[kanas.Kana]) -> None:
-        self.kanas: Tuple[kanas.Kana] = tuple(kanas)
+    def __init__(self, syllables: Sequence[kanas.Syllable]) -> None:
+        self.syllables: Tuple[kanas.Syllable] = tuple(syllables)
 
     def __str__(self) -> str:
-        return "".join(map(lambda kana: kana.symbol, self.kanas))
+        return "".join(map(str, self.syllables))
 
     def __len__(self) -> int:
-        return len(self.kanas)
+        return len(self.syllables)
 
     def __eq__(self, other) -> bool:
-        assert isinstance(other, KanaStr)
-        return self.kanas == other.kanas
+        assert isinstance(other, SyllableStr)
+        return self.syllables == other.syllables
 
     def __getitem__(self, key):
-        return self.kanas[key]
+        return self.syllables[key]
 
-    def add(self, kana: Union[kanas.Kana, str]) -> KanaStr:
-        if type(kana) == str:
-            assert len(kana) == 1
-        kana = safetyinnerwrapper_str2kana(kana)
-        return KanaStr(kanas=self.kanas+(kana,))
+    def add(self, syllable: kanas.Syllable) -> SyllableStr:
+        # kana = safetyinnerwrapper_str2kana(kana)
+        return SyllableStr(syllable == self.syllables+(syllable,))
 
-    def extend(self, kanastr: KanaStr) -> None:
+    def extend(self, kanastr: SyllableStr) -> None:
         # TODO: support string?
-        return KanaStr(kanas=self.kanas+kanastr.kanas)
+        return SyllableStr(kanas=self.syllables+kanastr.syllables)
 
-    def startswith_kana(self):
-        pass
+    # def startswith_kana(self):  # TODO: isn't this a waste word?
+    #     pass
 
-    def endswith_kana(self, kana: Union[kanas.Kana, str]):
-        # TODO: support KanaStr and relaxed init
-        kana = safetyinnerwrapper_str2kana(kana)
-        return self.kanas[-1] == kana
+    # def endswith_kana(self, kana: Union[kanas.Kana, str]):
+    #     # TODO: support SyllableStr and relaxed init
+    #     kana = safetyinnerwrapper_str2kana(kana)
+    #     return self.syllables[-1] == kana
 
-    def dakuonize(self) -> KanaStr:
+    def dakuonize(self) -> SyllableStr:
         # TODO: good to be present here? (seems y!)
         assert len(self) > 0
-        return KanaStr(kanas=[self.kanas[0].dakuon]+self.kanas[1:])
+        return SyllableStr(kanas=[self.syllables[0].dakuon]+self.syllables[1:])
 
-    def sukuonize(self) -> KanaStr:
+    def sukuonize(self) -> SyllableStr:
         assert len(self) > 0
         # TODO: not done yet
-        last_kana = self.kanas[-1]
-        if last_kana.sukuonizable():
-            # TODO: this is only hiragana!!!
-            return KanaStr(kanas=self.kanas[:-1] + [kanas.KANA_DICT['っ']])
-        return self
+        last_syllable = self.syllables[-1]
+        # if last_kana.sukuonizable():
+        #     # TODO: this is only hiragana!!!
+        #     return SyllableStr(kanas=self.syllables[:-1] + [kanas.KANA_DICT['っ']])
+        # return self
