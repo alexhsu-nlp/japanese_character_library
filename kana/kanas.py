@@ -66,10 +66,15 @@ class Syllable(JapaneseCharacter):
         # TODO: I think this is overly costly, perhaps make a syllable pool
         return Syllable(kana=self.kana.dakuon, sutegana=self.sutegana)
 
-    def check(self):
-        assert is_same_type(self.kana, self.sutegana)
+    def check(self) -> bool:
+        if not is_same_type(self.kana, self.sutegana):
+            return False
         if self.sutegana is not None:
-            assert self.kana.dan != self.sutegana.hiragana  # TODO: sutegana's kana
+            return self.kana.dan != self.sutegana.hiragana  # TODO: sutegana's kana
+        return True
+    
+    def __eq__(self, other):
+        return isinstance(other, Syllable) and self.kana == other.kana and self.sutegana == other.sutegana
 
 
 class Kanji(JapaneseCharacter):

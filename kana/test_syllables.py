@@ -29,7 +29,7 @@ class TestSyllables:
         assert syllable.dakuon.kana.pron.symbol == 'ぐ'
         # TODO: is this dan assignment good?
         assert syllable.kana.gyou.symbol == 'か'
-        syllable.check()
+        assert syllable.check() is True
 
     def test_syllable_vu_kata(self):
         syllable = kanas.char2syllable('ヴ')
@@ -38,7 +38,7 @@ class TestSyllables:
         assert syllable.dakuon.kana.pron.symbol == 'ヴ'
         # TODO: is this dan assignment good?
         assert syllable.kana.gyou.symbol == 'N'
-        syllable.check()
+        assert syllable.check() is True
 
     def test_syllable_va_kata(self):
         syllable = kanas.char2syllable('ヴァ')
