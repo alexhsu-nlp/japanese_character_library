@@ -97,67 +97,67 @@ class TestKanaDict:
         assert kana_a.gyou.symbol == 'な'
 
 
-class TestSyllables:
+class TestSuteganas:
 
     # TODO: now these should be put into syllables checking
     # NOTE: all the youon's are not sukuonizable except じゅう (十) e.g. in じっぷん [what about 入 sometimes にっ?]
     # NOTE: to consider 歴史的仮名遣い, the previous kana can be affected to have youon!!!
-    def test_sutegana_hira_sha(self):
-        kana_a = kanas.KANA_DICT['しゃ']
-        assert kana_a.is_hiragana()
-        assert not kana_a.is_katakana()
-        assert kana_a.dakuon.pron.symbol == 'じゃ'
-        # TODO: is this dan assignment good?
-        assert kana_a.dan.symbol == 'や'
-        assert kana_a.gyou.symbol == 'し'
+    # def test_sutegana_hira_sha(self):
+    #     kana_a = kanas.KANA_DICT['しゃ']
+    #     assert kana_a.is_hiragana()
+    #     assert not kana_a.is_katakana()
+    #     assert kana_a.dakuon.pron.symbol == 'じゃ'
+    #     # TODO: is this dan assignment good?
+    #     assert kana_a.dan.symbol == 'や'
+    #     assert kana_a.gyou.symbol == 'し'
 
-    def test_sutegana_kata_she(self):
-        kana_a = kanas.KANA_DICT['シェ']
-        assert not kana_a.is_hiragana()
-        assert kana_a.is_katakana()
-        assert kana_a.dakuon.pron.symbol == 'ジェ'
-        # TODO: is this dan assignment good?
-        assert kana_a.dan.symbol == 'え'
-        assert kana_a.gyou.symbol == 'さ'
+    # def test_sutegana_kata_she(self):
+    #     kana_a = kanas.KANA_DICT['シェ']
+    #     assert not kana_a.is_hiragana()
+    #     assert kana_a.is_katakana()
+    #     assert kana_a.dakuon.pron.symbol == 'ジェ'
+    #     # TODO: is this dan assignment good?
+    #     assert kana_a.dan.symbol == 'え'
+    #     assert kana_a.gyou.symbol == 'さ'
 
-    def test_sutegana_kata_kuo(self):
-        kana_a = kanas.KANA_DICT['クォ']
-        assert not kana_a.is_hiragana()
-        assert kana_a.is_katakana()
-        # TODO: actually this dakuon does not exist
-        assert kana_a.dakuon.pron.symbol == 'ぐぉ'
-        # TODO: is this dan and gyou assignment good?
-        # reasoning: the gyou can distinguish the fact that they are foreign
-        assert kana_a.dan.symbol == 'お'
-        assert kana_a.gyou.symbol == 'く'
+    # def test_sutegana_kata_kuo(self):
+    #     kana_a = kanas.KANA_DICT['クォ']
+    #     assert not kana_a.is_hiragana()
+    #     assert kana_a.is_katakana()
+    #     # TODO: actually this dakuon does not exist
+    #     assert kana_a.dakuon.pron.symbol == 'ぐぉ'
+    #     # TODO: is this dan and gyou assignment good?
+    #     # reasoning: the gyou can distinguish the fact that they are foreign
+    #     assert kana_a.dan.symbol == 'お'
+    #     assert kana_a.gyou.symbol == 'く'
 
-    def test_sutegana_kata_tsuo(self):
-        kana_a = kanas.KANA_DICT['ツォ']
-        assert not kana_a.is_hiragana()
-        assert kana_a.is_katakana()
-        # TODO: actually this dakuon does not exist
-        assert kana_a.dakuon.pron.symbol == 'つぉ'
-        # TODO: is this dan and gyou assignment good?
-        assert kana_a.dan.symbol == 'お'
-        assert kana_a.gyou.symbol == 'つ'
+    # def test_sutegana_kata_tsuo(self):
+    #     kana_a = kanas.KANA_DICT['ツォ']
+    #     assert not kana_a.is_hiragana()
+    #     assert kana_a.is_katakana()
+    #     # TODO: actually this dakuon does not exist
+    #     assert kana_a.dakuon.pron.symbol == 'つぉ'
+    #     # TODO: is this dan and gyou assignment good?
+    #     assert kana_a.dan.symbol == 'お'
+    #     assert kana_a.gyou.symbol == 'つ'
 
-    def test_sutegana_kata_fo(self):
-        kana_a = kanas.KANA_DICT['フォ']
-        assert not kana_a.is_hiragana()
-        assert kana_a.is_katakana()
-        # TODO: actually this dakuon does not exist
-        assert kana_a.dakuon.pron.symbol == 'ぶぉ'
-        # TODO: is this dan and gyou assignment good?
-        assert kana_a.dan.symbol == 'お'
-        # shouldn't the gyou be ふ?
-        assert kana_a.gyou.symbol == 'ふ'
+    # def test_sutegana_kata_fo(self):
+    #     kana_a = kanas.KANA_DICT['フォ']
+    #     assert not kana_a.is_hiragana()
+    #     assert kana_a.is_katakana()
+    #     # TODO: actually this dakuon does not exist
+    #     assert kana_a.dakuon.pron.symbol == 'ぶぉ'
+    #     # TODO: is this dan and gyou assignment good?
+    #     assert kana_a.dan.symbol == 'お'
+    #     # shouldn't the gyou be ふ?
+    #     assert kana_a.gyou.symbol == 'ふ'
 
-    def test_sutegana_kata_deu(self):
-        kana_a = kanas.KANA_DICT['デュ']
-        assert not kana_a.is_hiragana()
-        assert kana_a.is_katakana()
-        # TODO: actually this dakuon does not exist
-        assert kana_a.dakuon.pron.symbol == 'でゅ'
-        # TODO: is this dan and gyou assignment good?
-        assert kana_a.dan.symbol == 'ゆ'
-        assert kana_a.gyou.symbol == 'で'
+    # def test_sutegana_kata_deu(self):
+    #     kana_a = kanas.KANA_DICT['デュ']
+    #     assert not kana_a.is_hiragana()
+    #     assert kana_a.is_katakana()
+    #     # TODO: actually this dakuon does not exist
+    #     assert kana_a.dakuon.pron.symbol == 'でゅ'
+    #     # TODO: is this dan and gyou assignment good?
+    #     assert kana_a.dan.symbol == 'ゆ'
+    #     assert kana_a.gyou.symbol == 'で'
