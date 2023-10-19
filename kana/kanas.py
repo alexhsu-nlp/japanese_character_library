@@ -53,7 +53,7 @@ class Syllable(JapaneseCharacter):
 
     def __str__(self):
         return self.kana.symbol + self.sutegana.symbol
-    
+
     @property
     def pron(self):
         # TODO: pron of katakanas and kanjis and etc. together?
@@ -61,11 +61,12 @@ class Syllable(JapaneseCharacter):
 
     @property
     def dakuon(self):
-        #TODO: I think this is overly costly
+        # TODO: I think this is overly costly, perhaps make a syllable pool
         return Syllable(kana=self.kana.dakuon, sutegana=self.sutegana)
-    
+
     def check(self):
-        return is_same_type(self.kana, self.sutegana)
+        assert is_same_type(self.kana, self.sutegana)
+        assert self.kana.dan != self.sutegana.hiragana  # TODO: sutegana's kana
 
 
 class Kanji(JapaneseCharacter):
@@ -93,13 +94,12 @@ class BaseKana:
 
     def __repr__(self) -> str:
         return f"Kana<{self.symbol}>"
-    
+
     def is_hiragana(self) -> bool:
         return False
 
     def is_katakana(self) -> bool:
         return False
-    
 
     # def to_romaji(self) -> Romaji:
     #     # TODO: 3 kinds
@@ -108,21 +108,31 @@ class BaseKana:
 
 class Sutegana(BaseKana):
 
-    def __init__(self, symbol: str):
-        self.symbol = symbol
-    
+    def __init__(self, symbol: str, _consonant: str, _ord: Optional[int]):
+        super().__init__(symbol)
+        if _ord is not None:
+            hira_str = const.HIRAGANA_DICT[_consonant][_ord]
+            kata_str = const.KATAKANA_DICT[_consonant][_ord]
+            self.hiragana = KANA_DICT[hira_str]
+            self.katakana = KANA_DICT[kata_str]
+        else:
+            self.hiragana = None
+            self.katagana = None
+
     # TODO: in fact nothing can be done about this?
     # @property
     # def pron(self) -> Kana:
     #     return super().pron
 
+
 class SuteganaHira(Sutegana):
-    
+
     def is_hiragana(self) -> bool:
         return True
 
+
 class SuteganaKata(Sutegana):
-    
+
     def is_katakana(self) -> bool:
         return True
 
@@ -156,8 +166,6 @@ class Kana(BaseKana):
             return self
             # raise NotImplementedError
         return kana_gyoudan_dict[self.gyou.dakuon.symbol, self.dan.symbol][self._gyoudan_dict_index]
-
-    
 
     # def is_hatsuon(self) -> bool:
     #     return False
@@ -355,3 +363,28 @@ for kana in kana_dict.values():
 #     assert head in KANA_DICT
 #     head_kana = KANA_DICT[head] if head in const.abnormal_katakanas else KANA_DICT[head].dan
 #     return Kana(symbol=bikana_str, gyou=Gyou(symbol=head_kana), dan=Dan(symbol=dan_kana))
+
+# Make sutegana dictionary
+SUTEGANA_DICT = {}
+for consonant, row in const.SUTEGANA_HIRAS.items():
+    for i, sutegana in enumerate(row):
+        if sutegana is not None:
+            SUTEGANA_DICT[sutegana] = SuteganaHira(symbol=sutegana, _consonant=consonant, _ord=i
+                                                )
+for consonant, row in const.SUTEGANA_KATAS.items():
+    for i, sutegana in enumerate(row):
+        if sutegana is not None:
+            SUTEGANA_DICT[sutegana] = SuteganaKata(symbol=sutegana, _consonant=consonant, _ord=i
+                                                )
+
+
+def char2syllable(char: str) -> Syllable:
+    'converts a valid char into syllable'
+    assert len(char) <= 2 and len(char) >= 1
+    # TODO: sutegana dict
+    if len(char) == 1:
+        sutegana = None
+    else:
+        sutegana = SUTEGANA_DICT[char[1]]
+    syllable = Syllable(
+            kana=KANA_DICT[char[0]], sutegana=sutegana)
