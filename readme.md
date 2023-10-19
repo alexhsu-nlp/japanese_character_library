@@ -14,7 +14,7 @@ TODO List:
 - [x] *youon* (拗音) and *gairaigo*-only syllabaries problem (*sutegana* problem)
 - [ ] Treatment of "half-voiced" sounds (半濁音) (ぱぴぷぺぽ)
 - [x] Convertor considering edge cases of *sutegana*s as the basis for SyllableStr
-- [ ] Refactor the convertor above, add 'ー' (long vowel sound) treatment
+- [ ] Refactor the convertor above, add 'ー' (long vowel sound) treatment (how to deal with surface and real?)
 - [ ] Settle down design of JapaneseStr: including primitive *kanji*s
 - [ ] Settle down design of *kanji*s based on kanjidic2 of the KANJIDIC project
 - [ ] DP save all possible furiganas of words
@@ -24,7 +24,7 @@ TODO List:
 - [ ] Illustration of application: ruby generation for items of Korean-Japanese dictionary (https://korean.dict.naver.com/kojadict/)
 - [ ] Basic Testings using Pytest
 - [ ] Incorporate the old Japanese *kana* style (歴史的仮名遣い)
-- [ ] Iteraiton marks (踊り字): 々, ゝ, ゞ, ヽ, ヾ 
+- [ ] Iteration marks (踊り字): 々, ゝ, ゞ, ヽ, ヾ 
 - [ ] List of common special symbols: 〆 (しめ), ゟ (より), ヿ (こと), 〇 (れい), and the problem of ヵ/ヶ.
 ---
 
