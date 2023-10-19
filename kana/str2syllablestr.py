@@ -4,6 +4,7 @@ from typing import List
 # TODO: add punctuation into consideration?
 # TODO: add ー
 # NOTE: this is in fact an interface, and therefore indeed you should try to include everything
+# TODO: should I add kanji here?
 
 
 def str2syllablestr(string: str) -> kanastr.SyllableStr:

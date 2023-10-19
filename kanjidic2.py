@@ -2,7 +2,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import cached_property
 from typing import Union, List, Tuple, Dict, Sequence
-from kana import KANA_DICT, Hiragana, Katakana, Gyou, Dan, Kana, JapaneseCharacter, SUTEGANAS
+from kana.kanas import KANA_DICT, Hiragana, Katakana, Gyou, Dan, Kana, JapaneseCharacter, SUTEGANAS
+from kana.kanastr import SyllableStr
 
 # TODO: incorporate Yomis into Kanjis
 
@@ -17,9 +18,9 @@ def safetyinnerwrapper_str2kana(kana: Union[Kana, str]):
 # @dataclass
 # class KanjiDic2KanjiYomi:
 #     kanji: str
-#     onyomis: List[KanaStr]
-#     kunyomis: List[KanaStr] # TODO: error!!!
-#     nanoris: List[KanaStr]
+#     onyomis: List[SyllableStr]
+#     kunyomis: List[SyllableStr] # TODO: error!!!
+#     nanoris: List[SyllableStr]
 
 #     def __post_init__(self):
 #         self.valid_onyomis = self._get_valid_onyomis()
@@ -116,8 +117,8 @@ def safetyinnerwrapper_str2kana(kana: Union[Kana, str]):
 class KanjiDic2Yomi:
     # TODO: replace these with hiraganas!!!
     # TODO: what about "-"?
-    main: KanaStr
-    tail: KanaStr
+    main: SyllableStr
+    tail: SyllableStr
 
     def __str__(self):
         return self.main + self.tail
@@ -133,7 +134,7 @@ class KanjiDic2Yomi:
         return KanjiDic2Kunyomi(main=self.main.dakuonize(), tail=self.tail)
 
 
-def str2kanastr(string: str) -> KanaStr:
+def str2kanastr(string: str) -> SyllableStr:
     str_ind = 0
     len_str = len(string)
     kanas = []
@@ -145,7 +146,7 @@ def str2kanastr(string: str) -> KanaStr:
             kana_str = string[str_ind]
             str_ind += 1
         kanas.append(KANA_DICT[kana_str])
-    return KanaStr(kanas=kanas)
+    return SyllableStr(kanas=kanas)
 
 
 def kanjidic2_kunyomistr2obj(kunyomi_str: str):
@@ -175,7 +176,7 @@ class KanjiDic2Kunyomi(KanjiDic2Yomi):
 
     def __str__(self):
         if self.tail:
-            # TODO: self.tail should be KanaStr
+            # TODO: self.tail should be SyllableStr
             tail_part = '.' + self.tail
         else:
             tail_part = ''
