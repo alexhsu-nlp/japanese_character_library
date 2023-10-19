@@ -6,6 +6,8 @@ class TestSyllables:
 
     def test_syllable_sha_hira(self):
         syllable = kanas.char2syllable('しゃ')
+        assert str(syllable) == 'しゃ'
+        assert syllable.__repr__() == 'Syllable<しゃ>'
         assert syllable.kana == kanas.KANA_DICT['し']
         assert syllable.sutegana == kanas.SUTEGANA_DICT['ゃ']
         assert syllable.dakuon.kana.pron.symbol == 'じ'
@@ -33,6 +35,8 @@ class TestSyllables:
 
     def test_syllable_vu_kata(self):
         syllable = kanas.char2syllable('ヴ')
+        assert str(syllable) == 'ヴ'
+        assert syllable.__repr__() == 'Syllable<ヴ>'
         assert syllable.kana == kanas.KANA_DICT['ヴ']
         assert syllable.sutegana == None
         assert syllable.dakuon.kana.pron.symbol == 'ヴ'
@@ -48,7 +52,7 @@ class TestSyllables:
         # TODO: is this dan assignment good?
         assert syllable.kana.gyou.symbol == 'N'
         syllable.check()
-    
+
     def test_syllable_deu_kata(self):
         syllable = kanas.char2syllable('デュ')
         assert syllable.kana == kanas.KANA_DICT['デ']
@@ -57,7 +61,7 @@ class TestSyllables:
         # TODO: is this dan assignment good?
         assert syllable.kana.gyou.symbol == 'だ'
         syllable.check()
-    
+
     def test_syllable_pyo_hira(self):
         syllable = kanas.char2syllable('ぴょ')
         assert syllable.kana == kanas.KANA_DICT['ぴ']

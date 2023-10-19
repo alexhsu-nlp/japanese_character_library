@@ -54,6 +54,8 @@ class Syllable(JapaneseCharacter):
         return f'Syllable<{str(self)}>'
 
     def __str__(self):
+        if self.sutegana is None:
+            return self.kana.symbol
         return self.kana.symbol + self.sutegana.symbol
 
     @property
@@ -70,7 +72,10 @@ class Syllable(JapaneseCharacter):
         if not is_same_type(self.kana, self.sutegana):
             return False
         if self.sutegana is not None:
-            return self.kana.dan != self.sutegana.hiragana  # TODO: sutegana's kana
+            print('sutegana not none!')
+            print('left:', self.kana.dan)
+            print('right:', self.sutegana.hiragana)
+            return self.kana.dan.symbol != self.sutegana.hiragana.symbol  # TODO: sutegana's kana
         return True
     
     def __eq__(self, other):
