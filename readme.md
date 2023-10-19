@@ -13,8 +13,9 @@ This package/repository uses the [JMdict/EDICT](https://www.edrdg.org/wiki/index
 TODO List:
 - [x] *youon* (拗音) and *gairaigo*-only syllabaries problem (*sutegana* problem)
 - [ ] Treatment of "half-voiced" sounds (半濁音) (ぱぴぷぺぽ)
-- [ ] Analyzer for *sutegana*s as the basis for KanaStr
-- [ ] Settle down design of KanaStr: including primitive *kanji*s
+- [x] Convertor considering edge cases of *sutegana*s as the basis for SyllableStr
+- [ ] Refactor the convertor above, add 'ー' (long vowel sound) treatment
+- [ ] Settle down design of JapaneseStr: including primitive *kanji*s
 - [ ] Settle down design of *kanji*s based on kanjidic2 of the KANJIDIC project
 - [ ] DP save all possible furiganas of words
 - [ ] Treatment for corner cases of pronunciation
