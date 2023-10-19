@@ -64,8 +64,8 @@ KATA_SPECIAL_READINGS: Dict[str, str] = {
     'ヲ': 'オ',
 }
 
-HIRA_HATSUON: str = 'ん'
-KATA_HATSUON: str = 'ン'
+HIRA_HATSUON = 'ん'
+KATA_HATSUON = 'ン'
 
 
 # TODO: do I need to distinguish these two?
@@ -88,11 +88,11 @@ HIRA_ADD_YOUONS: Dict[str, str] = {
 }
 # ('ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ')
 KATA_ADD_YOUONS: Dict[str, str] = {
-    'ァ': 'ア',
-    'ィ': 'イ',
-    'ゥ': 'ウ',
-    'ェ': 'エ',
-    'ォ': 'オ',
+    'ァ': 'あ',
+    'ィ': 'い',
+    'ゥ': 'う',
+    'ェ': 'え',
+    'ォ': 'お',
 }
 # ('ァ', 'ィ', 'ゥ', 'ェ', 'ォ')
 HIRA_SOKUON: str = 'っ'
@@ -133,23 +133,28 @@ HanDAKUON_REV_MAP: Dict[str, str] = dict(map(reversed, HANDAKUON_MAP.items()))
 # https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai/honbun01.html, retrieved 2023.09.01
 # directly copied from the to avoid any misconstruction
 # TODO: mark specialty of ち, し, つ, ふ
-KATA_FOREIGN_YOUON_KANAS_TABLE1: Tuple[str, ...] = ('シェ',
-                                                    'チェ',
-                                                    'ツァ', 'ツェ', 'ツォ',
+KATA_FOREIGN_YOUON_TABLE1: Tuple[str, ...] = ('シェ',
+                                              'チェ',
+                                              'ツァ', 'ツェ', 'ツォ',
                                                     'ティ',
                                                     'ファ', 'フィ', 'フェ', 'フォ',
                                                     'ジェ',
-                                                    'ディ', 'デュ')
-KATA_FOREIGN_YOUON_KANAS_TABLE2: Tuple[str, ...] = ('イェ',
-                                                    'ウィ', 'ウェ', 'ウォ',
+                                                    # 'ディ', 'デュ',
+                                              )
+KATA_FOREIGN_YOUON_TABLE2: Tuple[str, ...] = ('イェ',
+                                              'ウィ', 'ウェ', 'ウォ',
                                                     'クァ', 'クィ', 'クェ', 'クォ',
                                                     'ツィ',
                                                     'トゥ',
                                                     'グァ',
                                                     'ドゥ',
-                                                    'ヴァ', 'ヴィ', 'ヴ', 'ヴぇ', 'ヴォ',
-                                                    'テュ', 'フュ', 'ヴュ')
+                                                    'ヴァ', 'ヴィ',
+                                                    # 'ヴ',
+                                              'ヴェ', 'ヴォ',
+                                                    # 'テュ', 'フュ', 'ヴュ'
+                                              )
 
+# TODO: why did I pull these out?
 abnormal_katakanas: Tuple[str, ...] = ('ヴ', 'ツ', 'フ', 'イ', 'ウ')
 
 # logic of construction: ???

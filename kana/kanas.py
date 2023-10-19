@@ -9,6 +9,7 @@ import numpy as np
 from functools import cached_property
 from typing import List, Tuple, Dict, Optional
 from kana import const
+from dataclasses import dataclass
 # from const import HIRAGANAS, KATAKANAS, const.DAKUON_MAP, DAKUON_REV_MAP, HIRA_SPECIAL_READINGS, KATA_SPECIAL_READINGS, HIRA_HATSUON
 
 
@@ -23,11 +24,33 @@ class JapaneseCharacter(Character):
     pass
 
 
+@dataclass
+class Syllable(JapaneseCharacter):
+    # core idea: a syllable consists of a kana and an optional sutegana; if the sutegana is "None", then blablabla
+    # TODO: if you adopt this, then you need to face わぁぁぁあ
+    # idea:
+    # in analyzing sentence, if after taking
+    # TODO: check kana dan and sutegana: must be different
+    kana: Kana
+    sutegana: Optional[BaseKana]
+    # TODO: sutegana needs to have an original
+
+    def __post__init__(self):
+        if self.kana.dan != self.sutegana:
+            raise Exception
+
+    def __repr__(self):
+        return
+
+    def __str__(self):
+        return self.kana.symbol + self.sutegana.symbol
+
+
 class Kanji(JapaneseCharacter):
     pass
 
 
-class BaseKana(JapaneseCharacter):
+class BaseKana:
 
     def __init__(self, symbol: str):
         self.symbol: str = symbol
@@ -67,6 +90,8 @@ class Kana(BaseKana):
         self.dan: Dan = dan
         # the `_pron_str` is to make sure that the `pron` property can be loaded later
         self._pron_str: str = ""
+        # gyoudan_dict is for searching a kana with Gyou and Dan
+        # at present it is only used for dauon [if no other uses, why not delete it?]
         self._gyoudan_dict_index: Optional[int] = None
 
     @cached_property
@@ -74,13 +99,17 @@ class Kana(BaseKana):
         # pron_str = HIRA_SPECIAL_READINGS.get(self.symbol, self.symbol)
         if self._pron_str == "":
             # TODO: this may not be a good idea
+            # TODO: convert katakana to hiragana
+            # thus it seems that suteganas need to be objectized
             return self
         return kana_dict[self._pron_str]
 
     @cached_property
     def dakuon(self) -> Kana:
         if self._gyoudan_dict_index is None:
-            raise NotImplementedError
+            # TODO: this may be erratic
+            return self
+            # raise NotImplementedError
         return kana_gyoudan_dict[self.gyou.dakuon.symbol, self.dan.symbol][self._gyoudan_dict_index]
 
     def is_hiragana(self) -> bool:
@@ -104,6 +133,10 @@ class Dan(BaseKana):
 
     def __repr__(self) -> str:
         return f"Dan<{self.symbol}>"
+
+    def __eq__(self, other) -> bool:
+        # TODO: is this enough? or: self is other?
+        return isinstance(other, Dan) and other.symbol == self.symbol
 
 
 class Gyou(BaseKana):
@@ -145,6 +178,9 @@ class Hiragana(Kana):
 
     def is_hiragana(self) -> bool:
         return True
+
+    def __eq__(self, other):
+        return isinstance(other, Hiragana) and self.symbol == other.symbol
 
 
 class Katakana(Kana):
@@ -197,19 +233,6 @@ for i in range(m):
             kana_gyoudan_dict[(katakana.gyou.symbol,
                                katakana.dan.symbol)].append(katakana)
 
-# Assign dakuons
-for kana in kana_dict.values():
-    if kana.gyou.symbol in const.DAKUON_MAP:
-        kana._is_dakuon = False
-        for dakuon_kana in kana_gyoudan_dict[(const.DAKUON_MAP[kana.gyou.symbol], kana.dan)]:
-            if isinstance(dakuon_kana, type(kana)):
-                kana._dakuon = dakuon_kana
-    elif kana.gyou.symbol in const.DAKUON_REV_MAP:
-        kana._is_dakuon = True
-        kana._dakuon = kana
-    else:
-        kana._is_dakuon = False
-        kana._dakuon = kana
 
 # Assign 'ん'
 NONE_GYOU = Gyou(symbol='N')
@@ -225,7 +248,7 @@ NONE_KANA = Kana(symbol="N", gyou=NONE_GYOU, dan=NONE_DAN)
 
 kana_dict["N"] = NONE_KANA
 
-kana_gyoudan_dict['N', 'N'] = [NONE_KANA]
+kana_gyoudan_dict['N', 'N'] = [NONE_KANA, NONE_KANA]
 
 # final constants needed for other use
 
@@ -248,19 +271,40 @@ def char2kana(char: str) -> Kana:
     return KANA_DICT[char]
 
 
-def foreign_youon_loading(table_str_tuple: Tuple[str, ...]):
+def youon_loading(table_str_tuple: Tuple[str, ...], is_kata=True):
     # TODO: at present it only supports or
     for kana_str in table_str_tuple:
-        assert len(kana_str)
+        print(kana_str)
+        assert len(kana_str) == 2
         if kana_str[1] in const.KATA_YOUON_MAP:
+            # the case for true youons
             gyou = KANA_DICT[kana_str[0]].gyou
         else:
             # TODO: katakana or hiragana
+            # NOTE: in this case these gyous have the same dakuon, which is true for these special gairaigo syllabaries
             gyou = Gyou(symbol=kana_str[0])
-        dan = Gyou(symbol=kana_str[1])
+        dan = Dan(symbol=const.KATA_ADD_YOUONS[kana_str[1]])
         KANA_DICT[kana_str] = Katakana(
-            kana_symbol=kana_str, hiragana_symbol="", gyou='', dan='')
+            kana_symbol=kana_str, hiragana_symbol="", gyou=gyou, dan=dan)
 
+
+youon_loading(const.KATA_FOREIGN_YOUON_TABLE1)
+
+youon_loading(const.KATA_FOREIGN_YOUON_TABLE2)
+
+# Assign dakuons
+for kana in kana_dict.values():
+    if kana.gyou.symbol in const.DAKUON_MAP:
+        kana._is_dakuon = False
+        for dakuon_kana in kana_gyoudan_dict[(const.DAKUON_MAP[kana.gyou.symbol], kana.dan.symbol)]:
+            if isinstance(dakuon_kana, type(kana)):
+                kana._dakuon = dakuon_kana
+    elif kana.gyou.symbol in const.DAKUON_REV_MAP:
+        kana._is_dakuon = True
+        kana._dakuon = kana
+    else:
+        kana._is_dakuon = False
+        kana._dakuon = kana
 
 # def analyze_bikana(bikana_str: str) -> Kana:
 #     # In fact the length of kana can be more than 2; consider the case 'わぁぁぁぁあ': it may cause word delimination problems

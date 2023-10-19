@@ -91,7 +91,8 @@ class TestKanaDict:
         assert kana_a.is_katakana()
         # TODO: should I make a pron.symbolunciation class?
         # TODO: how to treat these Nones
-        assert kana_a.dakuon.pron.symbol == 'ヌ'
+        assert kana_a.dakuon.symbol == 'ぬ'
+        assert kana_a.dakuon.pron.symbol == 'ぬ'
         assert kana_a.dan.symbol == 'う'
         assert kana_a.gyou.symbol == 'な'
 
@@ -129,7 +130,7 @@ class TestKanaDict:
         assert not kana_a.is_hiragana()
         assert kana_a.is_katakana()
         # TODO: actually this dakuon does not exist
-        assert kana_a.dakuon.pron.symbol == 'ずぉ'
+        assert kana_a.dakuon.pron.symbol == 'つぉ'
         # TODO: is this dan and gyou assignment good?
         assert kana_a.dan.symbol == 'お'
         assert kana_a.gyou.symbol == 'つ'
