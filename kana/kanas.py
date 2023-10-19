@@ -13,6 +13,7 @@ from kana.exceptions import SyllableError
 from dataclasses import dataclass
 # from const import HIRAGANAS, KATAKANAS, const.DAKUON_MAP, DAKUON_REV_MAP, HIRA_SPECIAL_READINGS, KATA_SPECIAL_READINGS, HIRA_HATSUON
 
+# TODO: simplify gyoudan_dict
 
 class Character:
     # TODO: this may incorporate characters in other languages?
@@ -55,12 +56,12 @@ class Syllable(JapaneseCharacter):
         return self.kana.symbol + self.sutegana.symbol
 
     @property
-    def pron(self):
+    def pron(self) -> Syllable:
         # TODO: pron of katakanas and kanjis and etc. together?
         pass
 
     @property
-    def dakuon(self):
+    def dakuon(self) -> Syllable:
         # TODO: I think this is overly costly, perhaps make a syllable pool
         return Syllable(kana=self.kana.dakuon, sutegana=self.sutegana)
 
@@ -202,6 +203,10 @@ class Gyou(BaseKana):
     @property
     def dakuon(self) -> Kana:
         return kana_dict[self._dakuon]
+    
+    @property
+    def handakuon(self) -> Kana:
+        return kana_dict[self._dakuon]
 
     def __eq__(self, other) -> bool:
         # TODO: is this enough? or: self is other?
@@ -236,8 +241,8 @@ class Katakana(Kana):
     def __init__(self, kana_symbol: str, hiragana_symbol: str, gyou: Gyou, dan: Dan) -> None:
         super().__init__(kana_symbol, gyou=gyou, dan=dan)
         self._hiragana: str = hiragana_symbol
-        self._pron_str: str = const.KATA_SPECIAL_READINGS.get(
-            self.symbol, self.symbol)
+        self._pron_str: str = const.HIRA_SPECIAL_READINGS.get(
+            self._hiragana, self._hiragana)
         self._gyoudan_dict_index: Optional[int] = 1
 
     @property
@@ -276,7 +281,7 @@ for i in range(m):
                                hiragana.dan.symbol)].append(hiragana)
         if katakanas[i][j] is not None:
             katakana = Katakana(
-                katakanas[i][j], hiragana_symbol=katakanas[i][j], gyou=gyou, dan=dan)
+                katakanas[i][j], hiragana_symbol=hiraganas[i][j], gyou=gyou, dan=dan)
             kana_dict[katakanas[i][j]] = katakana
             kana_gyoudan_dict[(katakana.gyou.symbol,
                                katakana.dan.symbol)].append(katakana)
@@ -319,26 +324,26 @@ def char2kana(char: str) -> Kana:
     return KANA_DICT[char]
 
 
-def youon_loading(table_str_tuple: Tuple[str, ...], is_kata=True):
-    # TODO: at present it only supports or
-    for kana_str in table_str_tuple:
-        print(kana_str)
-        assert len(kana_str) == 2
-        if kana_str[1] in const.KATA_YOUON_MAP:
-            # the case for true youons
-            gyou = KANA_DICT[kana_str[0]].gyou
-        else:
-            # TODO: katakana or hiragana
-            # NOTE: in this case these gyous have the same dakuon, which is true for these special gairaigo syllabaries
-            gyou = Gyou(symbol=kana_str[0])
-        dan = Dan(symbol=const.KATA_ADD_YOUONS[kana_str[1]])
-        KANA_DICT[kana_str] = Katakana(
-            kana_symbol=kana_str, hiragana_symbol="", gyou=gyou, dan=dan)
+# def youon_loading(table_str_tuple: Tuple[str, ...], is_kata=True):
+#     # TODO: at present it only supports or
+#     for kana_str in table_str_tuple:
+#         print(kana_str)
+#         assert len(kana_str) == 2
+#         if kana_str[1] in const.KATA_YOUON_MAP:
+#             # the case for true youons
+#             gyou = KANA_DICT[kana_str[0]].gyou
+#         else:
+#             # TODO: katakana or hiragana
+#             # NOTE: in this case these gyous have the same dakuon, which is true for these special gairaigo syllabaries
+#             gyou = Gyou(symbol=kana_str[0])
+#         dan = Dan(symbol=const.KATA_ADD_YOUONS[kana_str[1]])
+#         KANA_DICT[kana_str] = Katakana(
+#             kana_symbol=kana_str, hiragana_symbol="", gyou=gyou, dan=dan)
 
 
-youon_loading(const.KATA_FOREIGN_YOUON_TABLE1)
+# youon_loading(const.KATA_FOREIGN_YOUON_TABLE1)
 
-youon_loading(const.KATA_FOREIGN_YOUON_TABLE2)
+# youon_loading(const.KATA_FOREIGN_YOUON_TABLE2)
 
 # Assign dakuons
 for kana in kana_dict.values():
@@ -368,14 +373,18 @@ for kana in kana_dict.values():
 SUTEGANA_DICT = {}
 for consonant, row in const.SUTEGANA_HIRAS.items():
     for i, sutegana in enumerate(row):
+        if len(row) == 1:
+            i = None
         if sutegana is not None:
             SUTEGANA_DICT[sutegana] = SuteganaHira(symbol=sutegana, _consonant=consonant, _ord=i
-                                                )
+                                                   )
 for consonant, row in const.SUTEGANA_KATAS.items():
     for i, sutegana in enumerate(row):
+        if len(row) == 1:
+            i = None
         if sutegana is not None:
             SUTEGANA_DICT[sutegana] = SuteganaKata(symbol=sutegana, _consonant=consonant, _ord=i
-                                                )
+                                                   )
 
 
 def char2syllable(char: str) -> Syllable:
@@ -386,5 +395,5 @@ def char2syllable(char: str) -> Syllable:
         sutegana = None
     else:
         sutegana = SUTEGANA_DICT[char[1]]
-    syllable = Syllable(
-            kana=KANA_DICT[char[0]], sutegana=sutegana)
+    return Syllable(
+        kana=KANA_DICT[char[0]], sutegana=sutegana)
