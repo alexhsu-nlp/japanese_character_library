@@ -96,6 +96,12 @@ class TestKanaDict:
         assert kana_a.dan.symbol == 'う'
         assert kana_a.gyou.symbol == 'な'
 
+
+class TestSyllables:
+
+    # TODO: now these should be put into syllables checking
+    # NOTE: all the youon's are not sukuonizable except じゅう (十) e.g. in じっぷん [what about 入 sometimes にっ?]
+    # NOTE: to consider 歴史的仮名遣い, the previous kana can be affected to have youon!!!
     def test_sutegana_hira_sha(self):
         kana_a = kanas.KANA_DICT['しゃ']
         assert kana_a.is_hiragana()

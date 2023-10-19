@@ -9,6 +9,7 @@ import numpy as np
 from functools import cached_property
 from typing import List, Tuple, Dict, Optional
 from kana import const
+from kana.exceptions import SyllableError
 from dataclasses import dataclass
 # from const import HIRAGANAS, KATAKANAS, const.DAKUON_MAP, DAKUON_REV_MAP, HIRA_SPECIAL_READINGS, KATA_SPECIAL_READINGS, HIRA_HATSUON
 
@@ -24,6 +25,10 @@ class JapaneseCharacter(Character):
     pass
 
 
+def is_same_type(kana1: BaseKana, kana2: BaseKana):
+    return (kana1.is_hiragana() and kana2.is_hiragana()) or (kana1.is_katakana() and kana2.is_katakana())
+
+
 @dataclass
 class Syllable(JapaneseCharacter):
     # core idea: a syllable consists of a kana and an optional sutegana; if the sutegana is "None", then blablabla
@@ -32,18 +37,35 @@ class Syllable(JapaneseCharacter):
     # in analyzing sentence, if after taking
     # TODO: check kana dan and sutegana: must be different
     kana: Kana
-    sutegana: Optional[BaseKana]
+    sutegana: Sutegana
     # TODO: sutegana needs to have an original
+    # TODO: distinguish katakana and hiragana suteganas
+    # NOTE: Syllable is ALWAYS SHORT (no long syllables)
 
     def __post__init__(self):
         if self.kana.dan != self.sutegana:
-            raise Exception
+            raise SyllableError(
+                f"Illegal syllable as the main kana\'s dan, '{self.kana.dan}', does not fit with sutegana '{self.sutegana}'.")
+        assert is_same_type(self.kana, self.sutegana)
 
     def __repr__(self):
-        return
+        return f'Syllable<{str(self)}>'
 
     def __str__(self):
         return self.kana.symbol + self.sutegana.symbol
+    
+    @property
+    def pron(self):
+        # TODO: pron of katakanas and kanjis and etc. together?
+        pass
+
+    @property
+    def dakuon(self):
+        #TODO: I think this is overly costly
+        return Syllable(kana=self.kana.dakuon, sutegana=self.sutegana)
+    
+    def check(self):
+        return is_same_type(self.kana, self.sutegana)
 
 
 class Kanji(JapaneseCharacter):
@@ -55,15 +77,10 @@ class BaseKana:
     def __init__(self, symbol: str):
         self.symbol: str = symbol
         self._is_dakuon = False
-        self._has_youon = False
         # self.base_romaji = romaji
 
     @property
     def pron(self) -> Kana:
-        raise NotImplementedError
-
-    @property
-    def dakuon(self) -> Kana:
         raise NotImplementedError
 
     @property
@@ -76,10 +93,38 @@ class BaseKana:
 
     def __repr__(self) -> str:
         return f"Kana<{self.symbol}>"
+    
+    def is_hiragana(self) -> bool:
+        return False
+
+    def is_katakana(self) -> bool:
+        return False
+    
 
     # def to_romaji(self) -> Romaji:
     #     # TODO: 3 kinds
     #     pass
+
+
+class Sutegana(BaseKana):
+
+    def __init__(self, symbol: str):
+        self.symbol = symbol
+    
+    # TODO: in fact nothing can be done about this?
+    # @property
+    # def pron(self) -> Kana:
+    #     return super().pron
+
+class SuteganaHira(Sutegana):
+    
+    def is_hiragana(self) -> bool:
+        return True
+
+class SuteganaKata(Sutegana):
+    
+    def is_katakana(self) -> bool:
+        return True
 
 
 class Kana(BaseKana):
@@ -112,11 +157,7 @@ class Kana(BaseKana):
             # raise NotImplementedError
         return kana_gyoudan_dict[self.gyou.dakuon.symbol, self.dan.symbol][self._gyoudan_dict_index]
 
-    def is_hiragana(self) -> bool:
-        return False
-
-    def is_katakana(self) -> bool:
-        return False
+    
 
     # def is_hatsuon(self) -> bool:
     #     return False
@@ -145,7 +186,6 @@ class Gyou(BaseKana):
     def __init__(self, symbol: str) -> None:
         self.symbol: str = symbol
         self._is_dakuon: bool = symbol in const.DAKUON_REV_MAP
-        self._has_youon: bool = False
         self._dakuon: str = const.DAKUON_MAP.get(self.symbol, self.symbol)
 
     def __repr__(self) -> str:
