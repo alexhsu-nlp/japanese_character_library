@@ -93,6 +93,7 @@ KATA_SPECIAL_READINGS: Dict[str, str] = {
 HIRA_HATSUON = 'ん'
 KATA_HATSUON = 'ン'
 
+KATA_VU = 'ヴ'
 
 # TODO: do I need to distinguish these two?
 # TODO: seems that these are not needed anymore
@@ -123,8 +124,8 @@ KATA_ADD_YOUONS: Dict[str, str] = {
     'ォ': 'お',
 }
 # ('ァ', 'ィ', 'ゥ', 'ェ', 'ォ')
-HIRA_SOKUON: str = 'っ'
-KATA_SOKUON: str = 'ッ'
+# HIRA_SOKUON: str = 'っ'
+# KATA_SOKUON: str = 'ッ'
 
 # TODO: change these to romajis?
 DAKUON_MAP: Dict[str, str] = {

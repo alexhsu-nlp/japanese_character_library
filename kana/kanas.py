@@ -15,6 +15,7 @@ from dataclasses import dataclass
 
 # TODO: simplify gyoudan_dict
 
+
 class Character:
     # TODO: this may incorporate characters in other languages?
     pass
@@ -26,8 +27,8 @@ class JapaneseCharacter(Character):
     pass
 
 
-def is_same_type(kana1: BaseKana, kana2: BaseKana):
-    return (kana1.is_hiragana() and kana2.is_hiragana()) or (kana1.is_katakana() and kana2.is_katakana())
+def is_same_type(kana1: Optional[BaseKana], kana2: Optional[BaseKana], allow_None=True):
+    return (allow_None and (kana1 is None or kana2 is None)) or(kana1.is_hiragana() and kana2.is_hiragana()) or (kana1.is_katakana() and kana2.is_katakana()) or (kana1.symbol == const.KATA_VU or kana2.symbol == const.KATA_VU)
 
 
 @dataclass
@@ -67,7 +68,8 @@ class Syllable(JapaneseCharacter):
 
     def check(self):
         assert is_same_type(self.kana, self.sutegana)
-        assert self.kana.dan != self.sutegana.hiragana  # TODO: sutegana's kana
+        if self.sutegana is not None:
+            assert self.kana.dan != self.sutegana.hiragana  # TODO: sutegana's kana
 
 
 class Kanji(JapaneseCharacter):
@@ -145,6 +147,7 @@ class Kana(BaseKana):
         self.gyou: Gyou = gyou
         self.dan: Dan = dan
         # the `_pron_str` is to make sure that the `pron` property can be loaded later
+
         self._pron_str: str = ""
         # gyoudan_dict is for searching a kana with Gyou and Dan
         # at present it is only used for dauon [if no other uses, why not delete it?]
@@ -153,6 +156,7 @@ class Kana(BaseKana):
     @cached_property
     def pron(self) -> Kana:
         # pron_str = HIRA_SPECIAL_READINGS.get(self.symbol, self.symbol)
+        print('str:', type(self._pron_str))
         if self._pron_str == "":
             # TODO: this may not be a good idea
             # TODO: convert katakana to hiragana
@@ -166,6 +170,11 @@ class Kana(BaseKana):
             # TODO: this may be erratic
             return self
             # raise NotImplementedError
+        print('ouch')
+        print(self.gyou.dakuon.symbol)
+        print(self.dan.symbol)
+        print(self._gyoudan_dict_index)
+        print(kana_gyoudan_dict[self.gyou.dakuon.symbol, self.dan.symbol])
         return kana_gyoudan_dict[self.gyou.dakuon.symbol, self.dan.symbol][self._gyoudan_dict_index]
 
     # def is_hatsuon(self) -> bool:
@@ -203,7 +212,7 @@ class Gyou(BaseKana):
     @property
     def dakuon(self) -> Kana:
         return kana_dict[self._dakuon]
-    
+
     @property
     def handakuon(self) -> Kana:
         return kana_dict[self._dakuon]
@@ -297,26 +306,26 @@ kana_dict[const.HIRA_HATSUON] = Hiragana(
 kana_dict[const.KATA_HATSUON] = Katakana(
     kana_symbol=const.KATA_HATSUON, hiragana_symbol=const.HIRA_HATSUON, gyou=NONE_GYOU, dan=NONE_DAN)
 
+
 NONE_KANA = Kana(symbol="N", gyou=NONE_GYOU, dan=NONE_DAN)
+
+VU_KANA = Katakana(
+    kana_symbol=const.KATA_VU, hiragana_symbol='ヴ', gyou=NONE_GYOU, dan=Dan(
+        symbol='う'))
+
+kana_dict[const.KATA_VU] = VU_KANA
 
 kana_dict["N"] = NONE_KANA
 
 kana_gyoudan_dict['N', 'N'] = [NONE_KANA, NONE_KANA]
+
+kana_gyoudan_dict['N', 'う'] = [NONE_KANA, VU_KANA]
 
 # final constants needed for other use
 
 KANA_DICT: Dict[str, Kana] = kana_dict
 SUTEGANAS = tuple(const.HIRA_YOUON_MAP.keys()) + tuple(const.HIRA_ADD_YOUONS.keys()) + \
     tuple(const.KATA_YOUON_MAP.keys()) + tuple(const.KATA_ADD_YOUONS.keys())
-
-nn = KANA_DICT['ん']
-
-
-print(nn.dan)
-print(nn.gyou)
-print(nn.symbol)
-print(nn.pron)
-# print(nn.hatsuon)
 
 
 def char2kana(char: str) -> Kana:
