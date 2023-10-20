@@ -3,6 +3,9 @@
 Python file for gojuuon (五十音) information.
 """
 from typing import Tuple, Optional, Dict
+from dataclasses import dataclass
+
+# TODO: also put kanas and suteganas into the `const` directory?
 
 KANA_ORDER = ('a', 'i', 'u', 'e', 'o')
 
@@ -173,3 +176,24 @@ abnormal_katakanas: Tuple[str, ...] = ('ヴ', 'ツ', 'フ', 'イ', 'ウ')
 
 # for 促音化
 SUKUON_KANAS = ('き', 'く', 'ち', 'つ', 'キ', 'ク', 'チ', 'ツ')
+
+# seems that this needs a case-by-case treatment
+SPECIAL_SYMBOLS = ('ー', '々', 'ゝ', 'ゞ', 'ヽ', 'ヾ')
+
+LONG_KATA_VOWEL_CHAR = 'ー'
+
+@dataclass
+class Odoriji:
+    symbol: str
+    is_hira: bool
+    voiced: bool
+
+class Odorijis:
+    # in fact it *can* be voiced for kanji sometimes
+    kanji = Odoriji(symbol='々', is_hira=False, voiced=False)
+    hira_common = Odoriji(symbol='ゝ', is_hira=True, voiced=False)
+    hira_voiced = Odoriji(symbol='ゞ', is_hira=True, voiced=True)
+    kata_common = Odoriji(symbol='ヽ', is_hira=False, voiced=False)
+    kata_voiced = Odoriji(symbol='ヾ', is_hira=False, voiced=False)
+
+
