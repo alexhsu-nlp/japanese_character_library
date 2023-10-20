@@ -187,12 +187,15 @@ class Kana(BaseKana):
             # TODO: this may be erratic
             return self
             # raise NotImplementedError
-        print('ouch')
-        print(self.gyou.dakuon.symbol)
-        print(self.dan.symbol)
-        print(self._gyoudan_dict_index)
-        print(kana_gyoudan_dict[self.gyou.dakuon.symbol, self.dan.symbol])
         return kana_gyoudan_dict[self.gyou.dakuon.symbol, self.dan.symbol][self._gyoudan_dict_index]
+
+    @cached_property
+    def rev_dakuon(self) -> Kana:
+        if self._gyoudan_dict_index is None:
+            # TODO: this may be erratic
+            return self
+            # raise NotImplementedError
+        return kana_gyoudan_dict[self.gyou.rev_dakuon.symbol, self.dan.symbol][self._gyoudan_dict_index]
 
     # def is_hatsuon(self) -> bool:
     #     return False
@@ -215,6 +218,11 @@ class Dan(BaseKana):
     def __eq__(self, other) -> bool:
         # TODO: is this enough? or: self is other?
         return isinstance(other, Dan) and other.symbol == self.symbol
+    
+    @property
+    def kana(self) -> Kana:
+        return kana_dict[self.symbol]
+    
 
 
 class Gyou(BaseKana):
@@ -224,6 +232,8 @@ class Gyou(BaseKana):
         self.symbol: str = symbol
         self._is_dakuon: bool = symbol in const.DAKUON_REV_MAP
         self._dakuon: str = const.DAKUON_MAP.get(self.symbol, self.symbol)
+        self._rev_dakuon: str = const.DAKUON_REV_MAP.get(
+            self.symbol, self.symbol)
 
     def __repr__(self) -> str:
         return f"Gyou<{self.symbol}>"
@@ -235,6 +245,10 @@ class Gyou(BaseKana):
     @property
     def handakuon(self) -> Kana:
         return kana_dict[self._dakuon]
+
+    @property
+    def rev_dakuon(self) -> Kana:
+        return kana_dict[self._rev_dakuon]
 
     def __eq__(self, other) -> bool:
         # TODO: is this enough? or: self is other?

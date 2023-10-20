@@ -2,9 +2,11 @@
 """
 Python file for gojuuon (五十音) information.
 """
-from typing import Tuple, Optional, Dict
+from typing import Tuple, Optional, Dict, List
 from dataclasses import dataclass
 from inspect import getmembers
+from functools import cached_property
+# from kana.utils import cached_classproperty
 
 # TODO: also put kanas and suteganas into the `const` directory?
 
@@ -185,22 +187,38 @@ LONG_KATA_VOWEL_CHAR = 'ー'
 
 
 @dataclass(frozen=True)
-class Odoriji:
+class IterSymbol:
     symbol: str
     is_hira: bool
     voiced: bool
 
 
-class Odorijis:
+class _IterSymbolCollection:
     # in fact it *can* be voiced for kanji sometimes
-    kanji = Odoriji(symbol='々', is_hira=False, voiced=False)
-    hira_unvoiced = Odoriji(symbol='ゝ', is_hira=True, voiced=False)
-    hira_voiced = Odoriji(symbol='ゞ', is_hira=True, voiced=True)
-    kata_unvoiced = Odoriji(symbol='ヽ', is_hira=False, voiced=False)
-    kata_voiced = Odoriji(symbol='ヾ', is_hira=False, voiced=False)
+    kanji = IterSymbol(symbol='々', is_hira=False, voiced=False)
+    hira_unvoiced = IterSymbol(symbol='ゝ', is_hira=True, voiced=False)
+    hira_voiced = IterSymbol(symbol='ゞ', is_hira=True, voiced=True)
+    kata_unvoiced = IterSymbol(symbol='ヽ', is_hira=False, voiced=False)
+    kata_voiced = IterSymbol(symbol='ヾ', is_hira=False, voiced=False)
 
-    @classmethod
-    def get_matched_odoroji(cls, string: str) -> Odoriji:
-        for _, odoriji in getmembers(cls):
-            if isinstance(odoriji, Odoriji) and odoriji.symbol == string:
-                return odoriji
+    def __init__(self):
+        self.itersymbolstr_dict: Dict[str, IterSymbol] = dict([(getattr(self, itersymbol_varname).symbol, getattr(self, itersymbol_varname))
+                            for itersymbol_varname in get_obj_varnames_with_specified_type(self, var_type=IterSymbol)])
+
+    # @cached_property
+    # def itersymbolstr_dict(self) -> Dict[str, IterSymbol]:
+    #     return
+
+
+def get_obj_varnames_with_specified_type(obj: object, var_type) -> List[str]:
+    print([f for f in dir(obj) if isinstance(getattr(obj, f), var_type)])
+    return [f for f in dir(obj) if isinstance(getattr(obj, f), var_type)]
+
+    # @classmethod
+    # def get_matched_odoroji(cls, string: str) -> Optional[IterSymbol]:
+    #     for _, odoriji in getmembers(cls):
+    #         if isinstance(odoriji, IterSymbol) and odoriji.symbol == string:
+    #             return odoriji
+
+
+ITER_SYMBOL_COLLECTION = _IterSymbolCollection()

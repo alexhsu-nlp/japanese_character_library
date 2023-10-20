@@ -14,6 +14,7 @@ class TestKanaDict:
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron.symbol == 'あ'
+        assert kana_a.rev_dakuon.pron.symbol == 'あ'
         assert kana_a.dan.symbol == 'あ'
         assert kana_a.gyou.symbol == 'あ'
 
@@ -22,6 +23,7 @@ class TestKanaDict:
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron.symbol == 'が'
+        assert kana_a.rev_dakuon.symbol == 'か'
         assert kana_a.dan.symbol == 'あ'
         assert kana_a.gyou.symbol == 'か'
 
@@ -30,6 +32,7 @@ class TestKanaDict:
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron.symbol == 'じ'
+        assert kana_a.rev_dakuon.pron.symbol == 'ち'
         assert kana_a.dan.symbol == 'い'
         assert kana_a.gyou.symbol == 'た'
 
@@ -46,6 +49,7 @@ class TestKanaDict:
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron.symbol == 'じ'
+        assert kana_a.rev_dakuon.symbol == 'し'
         assert kana_a.dan.symbol == 'い'
         assert kana_a.gyou.symbol == 'さ'
 
@@ -54,6 +58,7 @@ class TestKanaDict:
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron.symbol == 'ず'
+        assert kana_a.rev_dakuon.pron.symbol == 'つ'
         assert kana_a.dan.symbol == 'う'
         assert kana_a.gyou.symbol == 'た'
 
@@ -62,6 +67,7 @@ class TestKanaDict:
         assert kana_a.is_hiragana()
         assert not kana_a.is_katakana()
         assert kana_a.dakuon.pron.symbol == 'お'
+        assert kana_a.rev_dakuon.pron.symbol == 'お'
         assert kana_a.dan.symbol == 'お'
         assert kana_a.gyou.symbol == 'わ'
 
@@ -92,9 +98,22 @@ class TestKanaDict:
         # TODO: should I make a pron.symbolunciation class?
         # TODO: how to treat these Nones
         assert kana_a.dakuon.symbol == 'ヌ'
+        assert kana_a.rev_dakuon.symbol == 'ヌ'
         assert kana_a.dakuon.pron.symbol == 'ぬ'
         assert kana_a.dan.symbol == 'う'
         assert kana_a.gyou.symbol == 'な'
+
+    def test_katakana_nu(self):
+        kana_a = kanas.KANA_DICT['グ']
+        assert not kana_a.is_hiragana()
+        assert kana_a.is_katakana()
+        # TODO: should I make a pron.symbolunciation class?
+        # TODO: how to treat these Nones
+        assert kana_a.dakuon.symbol == 'グ'
+        assert kana_a.rev_dakuon.symbol == 'ク'
+        assert kana_a.dakuon.pron.symbol == 'ぐ'
+        assert kana_a.dan.symbol == 'う'
+        assert kana_a.gyou.symbol == 'が'
 
 
 class TestSuteganas:
@@ -110,4 +129,3 @@ class TestSuteganas:
     #     # TODO: is this dan assignment good?
     #     assert kana_a.dan.symbol == 'や'
     #     assert kana_a.gyou.symbol == 'し'
-

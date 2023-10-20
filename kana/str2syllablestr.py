@@ -1,4 +1,4 @@
-from kana import kanas, kanastr
+from kana import kanas, kanastr, const
 from typing import List, Tuple
 from dataclasses import dataclass, field
 
@@ -38,6 +38,19 @@ def str2syllablestr(string: str) -> kanastr.SyllableStr:
 
 def _get_inc_and_syllable_main(syllable_info: SyllableConstructionInfo) -> Tuple[int, kanas.Syllable]:
     current_char = syllable_info.current_char
+    if syllable_info.current_char == const.LONG_KATA_VOWEL_CHAR:
+        # TODO: all of bugs
+        long_kana = syllable_info.final_syllable.kana.dan.kana
+        # TODO: final syllable end sound
+        if isinstance(syllable_info.final_syllable.kana, kanas.Katakana):
+            return 1, kanas.Syllable(
+                kana=long_kana.katakana, sutegana=None)
+        return 1, kanas.Syllable(
+            kana=long_kana, sutegana=None)
+    itersymbol = const.ITER_SYMBOL_COLLECTION.itersymbolstr_dict.get(
+        syllable_info.current_char, None)
+    if itersymbol is not None:
+        return _get_inc_and_syllable_case_itersymbol(syllable_info=syllable_info, itersymbol=itersymbol)
     if current_char not in kanas.KANA_DICT:
         return _get_inc_and_syllable_case_sutegana(syllable_info=syllable_info)
     # current char in kana dict
@@ -45,6 +58,18 @@ def _get_inc_and_syllable_main(syllable_info: SyllableConstructionInfo) -> Tuple
         return _get_inc_and_syllable_case_kana(syllable_info=syllable_info)
     # last char in the string
     return 1, kanas.Syllable(kana=kanas.KANA_DICT[current_char], sutegana=None)
+
+
+def _get_inc_and_syllable_case_itersymbol(syllable_info: SyllableConstructionInfo, itersymbol: const.IterSymbol) -> Tuple[int, kanas.Syllable]:
+    assert itersymbol.symbol != '々'  # This is for kanji
+    assert syllable_info.final_syllable.sutegana is None
+    assert itersymbol.is_hira == syllable_info.final_syllable.kana.is_hiragana()
+    if itersymbol.voiced:
+        return 1, kanas.Syllable(
+            kana=syllable_info.final_syllable.kana.dakuon, sutegana=None)
+    # TODO: reduce voiceness
+    return 1, kanas.Syllable(
+        kana=syllable_info.final_syllable.kana.rev_dakuon, sutegana=None)
 
 
 def _get_inc_and_syllable_case_sutegana(syllable_info: SyllableConstructionInfo) -> Tuple[int, kanas.Syllable]:
@@ -65,6 +90,7 @@ def _get_inc_and_syllable_case_sutegana(syllable_info: SyllableConstructionInfo)
 
 
 def _get_inc_and_syllable_case_kana(syllable_info: SyllableConstructionInfo) -> Tuple[int, kanas.Syllable]:
+
     if syllable_info.next_char in kanas.SUTEGANA_DICT:
         tentative_syllable = kanas.Syllable(
             kana=kanas.KANA_DICT[syllable_info.current_char], sutegana=kanas.SUTEGANA_DICT[syllable_info.next_char])

@@ -1,35 +1,47 @@
 from kana import kanas, kanastr
 from kana.str2syllablestr import str2syllablestr
+import pytest
 
 
 class TestStr2Syllables:
 
-    def test1(self):
-        result = str2syllablestr('わたしのことは')
-        assert str(result) == 'わたしのことは'
-        assert len(result) == 7
+    @pytest.mark.parametrize(
+        'string,str_result,syllable_size',
+        [
+            ('わたしのことは', 'わたしのことは', 7),
+            ('きょうかいせん', 'きょうかいせん', 6),
+            ('おしいなぁ', 'おしいなあ', 5),
+            ('わぁぁぁあ', 'わああああ', 5),
+            ('ウイルスセキュリティがじゅうようだ', 'ウイルスセキュリティがじゅうようだ', 14),
+            ('ヴァイスシュヴァルツ', 'ヴァイスシュヴァルツ', 7)
+        ]
 
-    def test2(self):
-        result = str2syllablestr('きょうかいせん')
-        assert str(result) == 'きょうかいせん'
-        assert len(result) == 6
-
-    def test3(self):
-        result = str2syllablestr('おしいなぁ')
-        print(result[-1].check())
-        assert str(result) == 'おしいなあ'
-        assert len(result) == 5
-
-    def test4(self):
-        result = str2syllablestr('わぁぁぁあ')
-        assert len(result) == 5
-
-    def test5(self):
-        result = str2syllablestr('ウイルスセキュリティがじゅうようだ')
-
-    def test6(self):
-        result = str2syllablestr('ヴァイスシュヴァルツ')
+    )
+    def test_eval(self, string: str, str_result: str, syllable_size: int):
+        result = str2syllablestr(string)
+        assert str(result) == str_result
+        assert len(result) == syllable_size
 
     def test7(self):
         result = str2syllablestr('がっこうであったこわいはなし')
         assert len(result) == 14
+
+    def test8(self):
+        result = str2syllablestr('ハート')
+        assert len(result) == 3
+        assert str(result) == 'ハアト'
+
+    def test9(self):
+        result = str2syllablestr('ファックス')
+        assert len(result) == 4
+        assert str(result) == 'ファックス'
+
+    def test10(self):
+        result = str2syllablestr('つゞく')
+        assert len(result) == 3
+        assert str(result) == 'つづく'
+
+    def test10(self):
+        result = str2syllablestr('たゝく')
+        assert len(result) == 3
+        assert str(result) == 'たたく'
