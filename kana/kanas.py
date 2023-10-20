@@ -57,6 +57,8 @@ class Syllable(JapaneseCharacter):
     def __str__(self):
         if self.sutegana is None:
             return self.kana.symbol
+        elif self.kana is None:
+            return self.sutegana.symbol
         return self.kana.symbol + self.sutegana.symbol
 
     @property
