@@ -74,14 +74,15 @@ class Syllable(JapaneseCharacter):
 
     def check(self) -> bool:
         if self.kana is None:
-            return True # done in __post_init__
+            return True  # done in __post_init__
         if not is_same_type(self.kana, self.sutegana):
             return False
         if self.sutegana is not None:
             print('sutegana not none!')
             print('left:', self.kana.dan)
             print('right:', self.sutegana.hiragana)
-            return self.sutegana.symbol not in ['ッ', 'っ'] and self.kana.dan.symbol != self.sutegana.hiragana.symbol  # TODO: sutegana's kana
+            # TODO: sutegana's kana
+            return self.sutegana.symbol not in ['ッ', 'っ'] and self.kana.dan.symbol != self.sutegana.hiragana.symbol
         return True
 
     def __eq__(self, other):
@@ -397,7 +398,7 @@ for kana in kana_dict.values():
 #     return Kana(symbol=bikana_str, gyou=Gyou(symbol=head_kana), dan=Dan(symbol=dan_kana))
 
 # Make sutegana dictionary
-SUTEGANA_DICT = {}
+SUTEGANA_DICT: Dict[str, Sutegana] = {}
 for consonant, row in const.SUTEGANA_HIRAS.items():
     for i, sutegana in enumerate(row):
         if len(row) == 1:
