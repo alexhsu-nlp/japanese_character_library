@@ -4,6 +4,7 @@ Python file for gojuuon (五十音) information.
 """
 from typing import Tuple, Optional, Dict
 from dataclasses import dataclass
+from inspect import getmembers
 
 # TODO: also put kanas and suteganas into the `const` directory?
 
@@ -182,18 +183,24 @@ SPECIAL_SYMBOLS = ('ー', '々', 'ゝ', 'ゞ', 'ヽ', 'ヾ')
 
 LONG_KATA_VOWEL_CHAR = 'ー'
 
-@dataclass
+
+@dataclass(frozen=True)
 class Odoriji:
     symbol: str
     is_hira: bool
     voiced: bool
 
+
 class Odorijis:
     # in fact it *can* be voiced for kanji sometimes
     kanji = Odoriji(symbol='々', is_hira=False, voiced=False)
-    hira_common = Odoriji(symbol='ゝ', is_hira=True, voiced=False)
+    hira_unvoiced = Odoriji(symbol='ゝ', is_hira=True, voiced=False)
     hira_voiced = Odoriji(symbol='ゞ', is_hira=True, voiced=True)
-    kata_common = Odoriji(symbol='ヽ', is_hira=False, voiced=False)
+    kata_unvoiced = Odoriji(symbol='ヽ', is_hira=False, voiced=False)
     kata_voiced = Odoriji(symbol='ヾ', is_hira=False, voiced=False)
 
-
+    @classmethod
+    def get_matched_odoroji(cls, string: str) -> Odoriji:
+        for _, odoriji in getmembers(cls):
+            if isinstance(odoriji, Odoriji) and odoriji.symbol == string:
+                return odoriji

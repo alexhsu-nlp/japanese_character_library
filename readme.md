@@ -20,7 +20,7 @@ TODO List:
 - [ ] DP save all possible furiganas of words
 - [ ] Treatment for corner cases of pronunciation
 - [ ] Data reader support for the previously used corpus (https://github.com/ndl-lab/huriganacorpus-ndlbib)
-- [ ] A simple and ugly interface
+- [ ] A simple demo using jupyter notebook
 - [ ] Illustration of application: ruby generation for items of Korean-Japanese dictionary (https://korean.dict.naver.com/kojadict/)
 - [ ] Basic Testings using Pytest
 - [ ] Incorporate the old Japanese *kana* style (歴史的仮名遣い)
