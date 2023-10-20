@@ -32,9 +32,9 @@ class SyllableStr:
         # kana = safetyinnerwrapper_str2kana(kana)
         return SyllableStr(syllable == self.syllables+(syllable,))
 
-    def extend(self, kanastr: SyllableStr) -> None:
+    def extend(self, syllablestr: SyllableStr) -> None:
         # TODO: support string?
-        return SyllableStr(kanas=self.syllables+kanastr.syllables)
+        return SyllableStr(syllables=self.syllables+syllablestr.syllables)
 
     # def startswith_kana(self):  # TODO: isn't this a waste word?
     #     pass
@@ -49,10 +49,21 @@ class SyllableStr:
         assert len(self) > 0
         return SyllableStr(kanas=[self.syllables[0].dakuon]+self.syllables[1:])
 
+    def can_sokuonize(self) -> bool:
+        return self.syllables[-1].can_sukuonize()
+
     def sukuonize(self) -> SyllableStr:
+        # TODO: should I make this a binary stuff?
+        assert self.can_sokuonize()
         assert len(self) > 0
         # TODO: not done yet
         last_syllable = self.syllables[-1]
+        if last_syllable.kana.is_hiragana():
+            # TODO: remove hardcoding
+            # TODO: sutegana can form a unique onsetsu this time!
+            return SyllableStr(syllables=self.syllables[:-1] + [kanas.KANA_DICT['っ']])
+        elif last_syllable.kana.is_katakana():
+            return SyllableStr(kanas=self.syllables[:-1] + [kanas.KANA_DICT['ッ']])
         # if last_kana.sukuonizable():
         #     # TODO: this is only hiragana!!!
         #     return SyllableStr(kanas=self.syllables[:-1] + [kanas.KANA_DICT['っ']])

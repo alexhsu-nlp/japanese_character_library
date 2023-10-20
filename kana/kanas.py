@@ -28,7 +28,7 @@ class JapaneseCharacter(Character):
 
 
 def is_same_type(kana1: Optional[BaseKana], kana2: Optional[BaseKana], allow_None=True):
-    return (allow_None and (kana1 is None or kana2 is None)) or(kana1.is_hiragana() and kana2.is_hiragana()) or (kana1.is_katakana() and kana2.is_katakana()) or (kana1.symbol == const.KATA_VU or kana2.symbol == const.KATA_VU)
+    return (allow_None and (kana1 is None or kana2 is None)) or (kana1.is_hiragana() and kana2.is_hiragana()) or (kana1.is_katakana() and kana2.is_katakana()) or (kana1.symbol == const.KATA_VU or kana2.symbol == const.KATA_VU)
 
 
 @dataclass
@@ -38,17 +38,18 @@ class Syllable(JapaneseCharacter):
     # idea:
     # in analyzing sentence, if after taking
     # TODO: check kana dan and sutegana: must be different
-    kana: Kana
-    sutegana: Sutegana
+    kana: Optional[Kana]
+    sutegana: Optional[Sutegana]
     # TODO: sutegana needs to have an original
     # TODO: distinguish katakana and hiragana suteganas
     # NOTE: Syllable is ALWAYS SHORT (no long syllables)
 
-    def __post__init__(self):
-        if self.kana.dan != self.sutegana:
-            raise SyllableError(
-                f"Illegal syllable as the main kana\'s dan, '{self.kana.dan}', does not fit with sutegana '{self.sutegana}'.")
-        assert is_same_type(self.kana, self.sutegana)
+    def __post_init__(self):
+        # TODO: need this in advance?
+        assert not (self.kana is None and self.sutegana is None)
+        if self.kana is None:
+            assert self.sutegana.symbol in ('ッ', 'っ')
+        # assert is_same_type(self.kana, self.sutegana)
 
     def __repr__(self):
         return f'Syllable<{str(self)}>'
@@ -68,16 +69,21 @@ class Syllable(JapaneseCharacter):
         # TODO: I think this is overly costly, perhaps make a syllable pool
         return Syllable(kana=self.kana.dakuon, sutegana=self.sutegana)
 
+    def can_sukuonize(self) -> bool:
+        return self.sutegana is None and self.kana.can_sukuonize()
+
     def check(self) -> bool:
+        if self.kana is None:
+            return True # done in __post_init__
         if not is_same_type(self.kana, self.sutegana):
             return False
         if self.sutegana is not None:
             print('sutegana not none!')
             print('left:', self.kana.dan)
             print('right:', self.sutegana.hiragana)
-            return self.kana.dan.symbol != self.sutegana.hiragana.symbol  # TODO: sutegana's kana
+            return self.sutegana.symbol not in ['ッ', 'っ'] and self.kana.dan.symbol != self.sutegana.hiragana.symbol  # TODO: sutegana's kana
         return True
-    
+
     def __eq__(self, other):
         return isinstance(other, Syllable) and self.kana == other.kana and self.sutegana == other.sutegana
 
@@ -190,8 +196,10 @@ class Kana(BaseKana):
     # def is_hatsuon(self) -> bool:
     #     return False
 
-    def sukuonizable(self) -> bool:
-        return False
+    def can_sukuonize(self) -> bool:
+        # TODO: this is currently only a primitive check.
+        # TODO: case of にゅう, じゅう
+        return self.symbol in const.SUKUON_KANAS
 
 
 class Dan(BaseKana):

@@ -22,9 +22,14 @@ class TestStr2Syllables:
 
     def test4(self):
         result = str2syllablestr('わぁぁぁあ')
+        assert len(result) == 5
 
     def test5(self):
         result = str2syllablestr('ウイルスセキュリティがじゅうようだ')
 
     def test6(self):
         result = str2syllablestr('ヴァイスシュヴァルツ')
+
+    def test7(self):
+        result = str2syllablestr('がっこうであったこわいはなし')
+        assert len(result) == 14

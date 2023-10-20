@@ -171,4 +171,5 @@ KATA_FOREIGN_YOUON_TABLE2: Tuple[str, ...] = ('イェ',
 # TODO: why did I pull these out?
 abnormal_katakanas: Tuple[str, ...] = ('ヴ', 'ツ', 'フ', 'イ', 'ウ')
 
-# logic of construction: ???
+# for 促音化
+SUKUON_KANAS = ('き', 'く', 'ち', 'つ', 'キ', 'ク', 'チ', 'ツ')

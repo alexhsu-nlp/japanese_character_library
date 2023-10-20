@@ -1,5 +1,6 @@
 """
 File for generating the kanji dictionary for data cleaning.
+This is the original file used in the research project.
 """
 
 from dataclasses import dataclass
