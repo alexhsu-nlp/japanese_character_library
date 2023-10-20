@@ -24,7 +24,8 @@ TODO List:
 - [ ] Illustration of application: ruby generation for items of Korean-Japanese dictionary (https://korean.dict.naver.com/kojadict/)
 - [ ] Basic Testings using Pytest
 - [ ] Incorporate the old Japanese *kana* style (歴史的仮名遣い)
-- [ ] Iteration marks (踊り字): 々, ゝ, ゞ, ヽ, ヾ 
+- [x] Kana Iteration marks (踊り字): ゝ, ゞ, ヽ, ヾ 
+- [ ] Kanji iteration mark '々'
 - [ ] List of common special symbols: 〆 (しめ), ゟ (より), ヿ (こと), 〇 (れい), and the problem of ヵ/ヶ.
 ---
 
