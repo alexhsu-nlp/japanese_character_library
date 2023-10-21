@@ -27,6 +27,15 @@ class JapaneseCharacter(Character):
     pass
 
 
+# Needs refactoring the ideas
+@dataclass
+class JapaneseString:
+    from kanastr import SyllableStr
+    surface: str
+    inner: JapaneseCharacter
+    pron: SyllableStr
+
+
 def is_same_type(kana1: Optional[BaseKana], kana2: Optional[BaseKana], allow_None=True):
     return (allow_None and (kana1 is None or kana2 is None)) or (kana1.is_hiragana() and kana2.is_hiragana()) or (kana1.is_katakana() and kana2.is_katakana()) or (kana1.symbol == const.KATA_VU or kana2.symbol == const.KATA_VU)
 

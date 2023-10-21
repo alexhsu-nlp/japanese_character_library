@@ -9,109 +9,19 @@ from kana.str2syllablestr import str2syllablestr
 # TODO: incorporate Yomis into Kanjis
 
 
-def safetyinnerwrapper_str2kana(kana: Union[Kana, str]):
-    if isinstance(kana, str):
-        assert kana in KANA_DICT
-        kana = KANA_DICT[kana]
-    return kana
+@dataclass
+class Kanji(JapaneseCharacter):
+    symbol: str
+    yomi: Yomi
 
-
-# @dataclass
-# class KanjiDic2KanjiYomi:
-#     kanji: str
-#     onyomis: List[SyllableStr]
-#     kunyomis: List[SyllableStr] # TODO: error!!!
-#     nanoris: List[SyllableStr]
-
-#     def __post_init__(self):
-#         self.valid_onyomis = self._get_valid_onyomis()
-#         self.valid_kunyomis = self._get_valid_kunyomis()
-#         self.valid_yomis = self.valid_onyomis.union(self.valid_kunyomis)
-
-#     def _get_valid_onyomis(self):
-#         valid_onyomis = []
-#         for onyomi in self.onyomis:
-#             valid_onyomis.append(onyomi)
-#             if len(onyomi) > 1 and onyomi.endswith(('く', 'き', 'ち', 'つ')):
-#                 valid_onyomis.append(onyomi[:-1]+'っ')
-#             valid_onyomis.extend(self._dakuonize(onyomi))
-#         return set(valid_onyomis)
-
-#     def _get_valid_kunyomis(self):
-#         valid_kunyomis = []
-
-#         for kunyomi in self.kunyomis:
-#             kunyomi = kunyomi.replace("-", "")
-#             if "." in kunyomi:
-#                 assert kunyomi.count(".") == 1
-#                 splits = kunyomi.split('.')
-#                 valid_kunyomis.append(splits[0])
-#                 valid_kunyomis.append(splits[0]+splits[1])
-#                 valid_kunyomis.extend(self._dakuonize(splits[0]))
-#                 full_dakuon = self._dakuonize(splits[0]+splits[1])
-#                 valid_kunyomis.extend(full_dakuon)
-#                 for dakuon in full_dakuon:
-#                     valid_kunyomis.extend(self._verb_nominalize(dakuon))
-#                 valid_kunyomis.extend(
-#                     self._verb_nominalize(splits[0]+splits[1]))
-#             else:
-#                 valid_kunyomis.append(kunyomi)
-#                 valid_kunyomis.extend(self._dakuonize(kunyomi))
-#         valid_kunyomis.extend(self.nanoris)
-#         for nanori in self.nanoris:
-#             valid_kunyomis.extend(self._dakuonize(nanori))
-#         return set(valid_kunyomis)
-
-#     def _dakuonize(self, hiragana: str) -> List[str]:
-#         # same as pronunciation standard in dataset
-#         PREV_DAKUON_DICT = {
-#             'ti': ['zi'],
-#             'tu': ['zu'],
-#             'ty': ['zy'],
-#         }
-#         DAKUON_DICT = {
-#             'k': ['g'],
-#             't': ['d'],
-#             'h': ['p', 'b'],  # TODO: true?
-#             's': ['z'],
-#             'o': ['no'],
-#             'e': ['ne'],
-#             'i': ['mi'],
-#         }
-#         yomis = []
-#         romaji = jaconv.kana2nihonshiki(hiragana)
-#         # if self.kanji == '柱':
-#         #     print(romaji)
-#         if romaji.startswith(tuple(PREV_DAKUON_DICT.keys())):
-#             for dakuon in PREV_DAKUON_DICT[romaji[:2]]:
-#                 dakuon_romaji = dakuon + romaji[2:]
-#                 # if self.kanji == '柱':
-#                 #     print(dakuon_romaji)
-#                 #     print(jaconv.nihonshiki2kana(dakuon_romaji))
-#                 yomis.append(jaconv.nihonshiki2kana(dakuon_romaji))
-#         elif romaji.startswith(tuple(DAKUON_DICT.keys())):
-#             for dakuon in DAKUON_DICT[romaji[0]]:
-#                 dakuon_romaji = dakuon + romaji[1:]
-#                 # if self.kanji == '柱':
-#                 #     print(dakuon_romaji)
-#                 #     print(jaconv.nihonshiki2kana(dakuon_romaji))
-#                 yomis.append(jaconv.nihonshiki2kana(dakuon_romaji))
-#         return yomis
-
-#     def _verb_nominalize(self, hiragana: str) -> List[str]:
-#         """change a wago verb form to its noun form"""
-#         # print("nomialize:", hiragana)
-#         romaji = jaconv.kana2nihonshiki(hiragana)
-#         yomis = []
-#         if romaji.endswith("u"):
-#             noun_romaji = romaji[:-1] + "i"
-#             yomis.append(jaconv.nihonshiki2kana(noun_romaji))
-#         if romaji.endswith(("eru", "iru")):
-#             # print("TRUE")
-#             yomis.append(hiragana[:-1])
-#         return yomis
+# def safetyinnerwrapper_str2kana(kana: Union[Kana, str]):
+#     if isinstance(kana, str):
+#         assert kana in KANA_DICT
+#         kana = KANA_DICT[kana]
+#     return kana
 
 # TODO: this idea is still not mature
+
 
 class Yomi:
 

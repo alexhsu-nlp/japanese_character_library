@@ -17,7 +17,7 @@ TODO List:
 - [ ] Redefine syllable and mora
 - [x] Refactor the convertor above, add 'ー' (long vowel sound) treatment
 - [ ] Settle down design of JapaneseStr: including primitive *kanji*s
-- [ ] Settle down design of *kanji*s based on kanjidic2 of the KANJIDIC project
+- [x] Settle down design of *kanji*s based on kanjidic2 of the KANJIDIC project
 - [ ] DP save all possible furiganas of words
 - [ ] Treatment for corner cases of pronunciation
 - [ ] Data reader support for the previously used corpus (https://github.com/ndl-lab/huriganacorpus-ndlbib)
