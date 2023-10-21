@@ -92,10 +92,10 @@ def _get_inc_and_syllable_case_sutegana(syllable_info: SyllableConstructionInfo)
 def _get_inc_and_syllable_case_kana(syllable_info: SyllableConstructionInfo) -> Tuple[int, kanas.Syllable]:
 
     if syllable_info.next_char in kanas.SUTEGANA_DICT:
-        tentative_syllable = kanas.Syllable(
-            kana=kanas.KANA_DICT[syllable_info.current_char], sutegana=kanas.SUTEGANA_DICT[syllable_info.next_char])
-        if tentative_syllable.check():
-            return 2, tentative_syllable
+        kana = kanas.KANA_DICT[syllable_info.current_char]
+        sutegana = kanas.SUTEGANA_DICT[syllable_info.next_char]
+        if kanas.Syllable.is_valid_kana_sutegana_pair(kana=kana, sutegana=sutegana):
+            return 2, kanas.Syllable(kana=kana, sutegana=sutegana)
         return 1, kanas.Syllable(
             kana=kanas.KANA_DICT[syllable_info.current_char], sutegana=None)
     return 1, kanas.Syllable(

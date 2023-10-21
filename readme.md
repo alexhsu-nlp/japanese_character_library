@@ -1,6 +1,6 @@
 ## the Japanese Character Library Project
 
-Current status: Developing (incomplete; a basic version should be done before 2023.10.24 11:30 a.m. CST.) 
+Current status: Developing (incomplete; a basic version is planned be done before 2023.10.24 11:30 a.m. CST.) 
 
 This is an extension of my NLP course project done in CUHK(SZ) in 2023.
 
@@ -14,7 +14,8 @@ TODO List:
 - [x] *youon* (拗音) and *gairaigo*-only syllabaries problem (*sutegana* problem)
 - [ ] Treatment of "half-voiced" sounds (半濁音) (ぱぴぷぺぽ)
 - [x] Convertor considering edge cases of *sutegana*s as the basis for SyllableStr
-- [ ] Refactor the convertor above, add 'ー' (long vowel sound) treatment (how to deal with surface and real?)
+- [ ] Redefine syllable and mora
+- [x] Refactor the convertor above, add 'ー' (long vowel sound) treatment
 - [ ] Settle down design of JapaneseStr: including primitive *kanji*s
 - [ ] Settle down design of *kanji*s based on kanjidic2 of the KANJIDIC project
 - [ ] DP save all possible furiganas of words
@@ -39,3 +40,7 @@ Other reference websites:
 - https://www.youtube.com/watch?v=A-zL6VuJbjc
 - https://nihon5kyoushi.com/2018/05/29/%E4%BF%83%E9%9F%B3%E4%BE%BF%E3%81%AE%E5%95%8F%E9%A1%8C/
 - https://ja.wikipedia.org/wiki/%E8%B8%8A%E3%82%8A%E5%AD%97#%E3%82%9D%E3%81%A8%E3%83%BD%EF%BC%88%E4%B8%80%E3%81%AE%E5%AD%97%E7%82%B9%EF%BC%89
+
+Difference between mora (モーラ) and syllable (音節):
+- https://ja.wikipedia.org/wiki/%E3%83%A2%E3%83%BC%E3%83%A9
+- https://ja.wikipedia.org/wiki/%E9%9F%B3%E7%AF%80

@@ -177,8 +177,8 @@ KATA_FOREIGN_YOUON_TABLE2: Tuple[str, ...] = ('イェ',
 # TODO: why did I pull these out?
 abnormal_katakanas: Tuple[str, ...] = ('ヴ', 'ツ', 'フ', 'イ', 'ウ')
 
-# for 促音化
-SUKUON_KANAS = ('き', 'く', 'ち', 'つ', 'キ', 'ク', 'チ', 'ツ')
+# for 促音化; temporarily add う; NOTE: what about しゅう, にゅう
+SOKUON_KANAS = ('き', 'く', 'ち', 'つ', 'キ', 'ク', 'チ', 'ツ', 'う', 'ウ')
 
 # seems that this needs a case-by-case treatment
 SPECIAL_SYMBOLS = ('ー', '々', 'ゝ', 'ゞ', 'ヽ', 'ヾ')
@@ -203,7 +203,7 @@ class _IterSymbolCollection:
 
     def __init__(self):
         self.itersymbolstr_dict: Dict[str, IterSymbol] = dict([(getattr(self, itersymbol_varname).symbol, getattr(self, itersymbol_varname))
-                            for itersymbol_varname in get_obj_varnames_with_specified_type(self, var_type=IterSymbol)])
+                                                               for itersymbol_varname in get_obj_varnames_with_specified_type(self, var_type=IterSymbol)])
 
     # @cached_property
     # def itersymbolstr_dict(self) -> Dict[str, IterSymbol]:

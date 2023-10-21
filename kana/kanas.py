@@ -7,7 +7,7 @@ from __future__ import annotations
 from collections import defaultdict
 import numpy as np
 from functools import cached_property
-from typing import List, Tuple, Dict, Optional
+from typing import List, Tuple, Dict, Optional, Union
 from kana import const
 from kana.exceptions import SyllableError
 from dataclasses import dataclass
@@ -45,15 +45,25 @@ class Syllable(JapaneseCharacter):
     # NOTE: Syllable is ALWAYS SHORT (no long syllables)
 
     def __post_init__(self):
-        # TODO: need this in advance?
-        assert not (self.kana is None and self.sutegana is None)
-        if self.kana is None:
-            assert self.sutegana.symbol in ('ッ', 'っ')
-        elif True:
-            pass
-        else:
-            assert is_same_type(self.kana, self.sutegana, allow_None=False)
+        # TODO: then this is done twice?
+        assert Syllable.is_valid_kana_sutegana_pair(
+            self.kana, self.sutegana) is True
+
         # assert is_same_type(self.kana, self.sutegana)
+
+    @classmethod
+    def is_valid_kana_sutegana_pair(cls, kana: Optional[Kana], sutegana: Optional[Sutegana]):
+        if (kana is None and sutegana is None):
+            return False
+        if kana is None:
+            if sutegana.symbol not in ('ッ', 'っ'):
+                return False
+        elif sutegana is not None:
+            if not is_same_type(kana, sutegana, allow_None=False):
+                return False
+            if sutegana.symbol in ['ッ', 'っ'] or kana.dan.symbol == sutegana.hiragana.symbol:
+                return False
+        return True
 
     def __repr__(self):
         return f'Syllable<{str(self)}>'
@@ -75,8 +85,8 @@ class Syllable(JapaneseCharacter):
         # TODO: I think this is overly costly, perhaps make a syllable pool
         return Syllable(kana=self.kana.dakuon, sutegana=self.sutegana)
 
-    def can_sukuonize(self) -> bool:
-        return self.sutegana is None and self.kana.can_sukuonize()
+    def can_sokuonize(self) -> bool:
+        return self.sutegana is None and self.kana.can_sokuonize()
 
     @property
     def gyou(self) -> Gyou:
@@ -89,20 +99,25 @@ class Syllable(JapaneseCharacter):
         if self.sutegana is None:
             return self.kana.dan
         # TODO: dan of sutegana
-        return self.sutegana
+        assert NotImplementedError
+        # return self.sutegana
 
-    def check(self) -> bool:
-        if self.kana is None:
-            return True  # done in __post_init__
-        if not is_same_type(self.kana, self.sutegana):
-            return False
-        if self.sutegana is not None:
-            print('sutegana not none!')
-            print('left:', self.kana.dan)
-            print('right:', self.sutegana.hiragana)
-            # TODO: sutegana's kana
-            return self.sutegana.symbol not in ['ッ', 'っ'] and self.kana.dan.symbol != self.sutegana.hiragana.symbol
-        return True
+    def change_dan(self, dan: Union[Dan, str]):
+        assert self.sutegana is None  # TODO: solve this
+        return Syllable(kana=self.kana.change_dan(dan=dan), sutegana=self.sutegana)
+
+    # def check(self) -> bool:
+    #     if self.kana is None:
+    #         return True  # done in __post_init__
+    #     if not is_same_type(self.kana, self.sutegana):
+    #         return False
+    #     if self.sutegana is not None:
+    #         print('sutegana not none!')
+    #         print('left:', self.kana.dan)
+    #         print('right:', self.sutegana.hiragana)
+    #         # TODO: sutegana's kana
+    #         return self.sutegana.symbol not in ['ッ', 'っ'] and self.kana.dan.symbol != self.sutegana.hiragana.symbol
+    #     return True
 
     def __eq__(self, other):
         return isinstance(other, Syllable) and self.kana == other.kana and self.sutegana == other.sutegana
@@ -231,10 +246,17 @@ class Kana(BaseKana):
     # def is_hatsuon(self) -> bool:
     #     return False
 
-    def can_sukuonize(self) -> bool:
+    def can_sokuonize(self) -> bool:
         # TODO: this is currently only a primitive check.
         # TODO: case of にゅう, じゅう
-        return self.symbol in const.SUKUON_KANAS
+        return self.symbol in const.SOKUON_KANAS
+
+    def change_dan(self, dan: Union[Dan, str]) -> Kana:
+        if isinstance(dan, Dan):
+            dan_symbol = dan.symbol
+        else:
+            dan_symbol = dan
+        return kana_gyoudan_dict[self.gyou.symbol, dan_symbol][self._gyoudan_dict_index]
 
 
 class Dan(BaseKana):

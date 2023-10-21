@@ -10,22 +10,22 @@ import pytest
 
 class TestKanaDict:
 
-    @pytest.mark.parametrize(
-        argnames='hira_str,hira_str,dakuon_str,dakuon_pron_str,rev_dakuon_str,rev_dakuon_pron_str,dan_str,gyou_str',
-        argvalues=[
-            ()
-        ]
-    )
-    def test_hiragana(self, hira_str: str, dakuon_str: str, dakuon_pron_str: str, rev_dakuon_str: str, rev_dakuon_pron_str: str, dan_str: str, gyou_str: str):
-        kana = kanas.KANA_DICT[hira_str]
-        assert kana.is_hiragana()
-        assert not kana.is_katakana()
-        assert kana.dakuon.symbol == dakuon_str
-        assert kana.dakuon.pron.symbol == dakuon_pron_str
-        assert kana.rev_dakuon.symbol == rev_dakuon_str
-        assert kana.rev_dakuon.pron.symbol == rev_dakuon_pron_str
-        assert kana.dan.symbol == dan_str
-        assert kana.gyou.symbol == gyou_str
+    # @pytest.mark.parametrize(
+    #     argnames='hira_str,hira_str,dakuon_str,dakuon_pron_str,rev_dakuon_str,rev_dakuon_pron_str,dan_str,gyou_str',
+    #     argvalues=[
+    #         (,)
+    #     ]
+    # )
+    # def test_hiragana(self, hira_str: str, dakuon_str: str, dakuon_pron_str: str, rev_dakuon_str: str, rev_dakuon_pron_str: str, dan_str: str, gyou_str: str):
+    #     kana = kanas.KANA_DICT[hira_str]
+    #     assert kana.is_hiragana()
+    #     assert not kana.is_katakana()
+    #     assert kana.dakuon.symbol == dakuon_str
+    #     assert kana.dakuon.pron.symbol == dakuon_pron_str
+    #     assert kana.rev_dakuon.symbol == rev_dakuon_str
+    #     assert kana.rev_dakuon.pron.symbol == rev_dakuon_pron_str
+    #     assert kana.dan.symbol == dan_str
+    #     assert kana.gyou.symbol == gyou_str
 
     def test_hiragana_a(self):
         kana = kanas.KANA_DICT['あ']

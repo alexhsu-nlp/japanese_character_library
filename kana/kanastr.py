@@ -28,7 +28,11 @@ class SyllableStr:
         return self.syllables == other.syllables
 
     def __getitem__(self, key):
-        return self.syllables[key]
+        if isinstance(key, int):
+            return self.syllables[key]
+        elif isinstance(key, slice):
+            return SyllableStr(syllables=self.syllables.__getitem__(key))
+        raise ValueError('invalid key of SyllableStr')
 
     def add(self, syllable: kanas.Syllable) -> SyllableStr:
         # kana = safetyinnerwrapper_str2kana(kana)
@@ -46,6 +50,12 @@ class SyllableStr:
     def end_dan(self) -> kanas.Dan:
         return self[-1].dan
 
+    def change_end_dan(self, dan: Union[kanas.Dan, str]):
+        # TODO: how to get dan easily
+        if len(self) == 0:
+            return self  # TODO: should I copy it?
+        return self[:-1].add(self[-1].change_dan(dan=dan))
+
     # def startswith_kana(self):  # TODO: isn't this a waste word?
     #     pass
 
@@ -60,20 +70,23 @@ class SyllableStr:
         return SyllableStr(kanas=[self.syllables[0].dakuon]+self.syllables[1:])
 
     def can_sokuonize(self) -> bool:
-        return self.syllables[-1].can_sukuonize()
+        if self.syllables[-1].can_sokuonize():
+            if self.kana.symbol in ['う', 'ウ'] and self.sutegana.symbol not in ['ゅ', 'ユ']:
+                # TODO: じっ, にっ
+                return False
+            return True
+        return False
 
-    def sukuonize(self) -> SyllableStr:
+    def sokuonize(self) -> SyllableStr:
         # TODO: should I make this a binary stuff?
         assert self.can_sokuonize()
         assert len(self) > 0
-        # TODO: not done yet
         last_syllable = self.syllables[-1]
         if last_syllable.kana.is_hiragana():
             # TODO: remove hardcoding
-            # TODO: sutegana can form a unique onsetsu this time!
-            return SyllableStr(syllables=self.syllables[:-1] + [kanas.KANA_DICT['っ']])
+            return SyllableStr(syllables=self[:-1].add(kanas.Syllable(kanas.KANA_DICT['っ'])))
         elif last_syllable.kana.is_katakana():
-            return SyllableStr(kanas=self.syllables[:-1] + [kanas.KANA_DICT['ッ']])
+            return SyllableStr(syllables=self[:-1].add(kanas.Syllable(kanas.KANA_DICT['ッ'])))
         # if last_kana.sukuonizable():
         #     # TODO: this is only hiragana!!!
         #     return SyllableStr(kanas=self.syllables[:-1] + [kanas.KANA_DICT['っ']])
