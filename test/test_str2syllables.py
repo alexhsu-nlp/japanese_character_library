@@ -14,7 +14,7 @@ class TestStr2Syllables:
             ('わぁぁぁあ', 'わああああ', 5),
             ('ウイルスセキュリティがじゅうようだ', 'ウイルスセキュリティがじゅうようだ', 14),
             ('ヴァイスシュヴァルツ', 'ヴァイスシュヴァルツ', 7)
-        ]
+        ] 
 
     )
     def test_eval(self, string: str, str_result: str, syllable_size: int):

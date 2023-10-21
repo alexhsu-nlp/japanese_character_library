@@ -211,7 +211,6 @@ class _IterSymbolCollection:
 
 
 def get_obj_varnames_with_specified_type(obj: object, var_type) -> List[str]:
-    print([f for f in dir(obj) if isinstance(getattr(obj, f), var_type)])
     return [f for f in dir(obj) if isinstance(getattr(obj, f), var_type)]
 
     # @classmethod

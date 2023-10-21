@@ -49,6 +49,10 @@ class Syllable(JapaneseCharacter):
         assert not (self.kana is None and self.sutegana is None)
         if self.kana is None:
             assert self.sutegana.symbol in ('ッ', 'っ')
+        elif True:
+            pass
+        else:
+            assert is_same_type(self.kana, self.sutegana, allow_None=False)
         # assert is_same_type(self.kana, self.sutegana)
 
     def __repr__(self):
@@ -73,6 +77,19 @@ class Syllable(JapaneseCharacter):
 
     def can_sukuonize(self) -> bool:
         return self.sutegana is None and self.kana.can_sukuonize()
+
+    @property
+    def gyou(self) -> Gyou:
+        if self.kana is not None:
+            return self.kana.gyou
+        return NONE_GYOU
+
+    @property
+    def dan(self) -> Dan:
+        if self.sutegana is None:
+            return self.kana.dan
+        # TODO: dan of sutegana
+        return self.sutegana
 
     def check(self) -> bool:
         if self.kana is None:
@@ -135,11 +152,23 @@ class Sutegana(BaseKana):
         if _ord is not None:
             hira_str = const.HIRAGANA_DICT[_consonant][_ord]
             kata_str = const.KATAKANA_DICT[_consonant][_ord]
-            self.hiragana = KANA_DICT[hira_str]
-            self.katakana = KANA_DICT[kata_str]
+            self._hiragana: Hiragana = KANA_DICT[hira_str]
+            self._katakana: Katakana = KANA_DICT[kata_str]
         else:
-            self.hiragana = None
-            self.katagana = None
+            self._hiragana = None
+            self._katakana = None
+
+    @property
+    def dan(self) -> Dan:
+        return self._hiragana.dan
+
+    @property
+    def hiragana(self) -> Hiragana:
+        return self._hiragana
+
+    @property
+    def katakana(self) -> Katakana:
+        return self._katakana
 
     # TODO: in fact nothing can be done about this?
     # @property
@@ -220,11 +249,10 @@ class Dan(BaseKana):
     def __eq__(self, other) -> bool:
         # TODO: is this enough? or: self is other?
         return isinstance(other, Dan) and other.symbol == self.symbol
-    
+
     @property
     def kana(self) -> Kana:
         return kana_dict[self.symbol]
-    
 
 
 class Gyou(BaseKana):

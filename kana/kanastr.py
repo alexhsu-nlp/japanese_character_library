@@ -4,9 +4,11 @@ from functools import cached_property
 from typing import Union, List, Tuple, Dict, Sequence
 from kana import kanas
 
-
-# def safetyinnerwrapper_str2kana(kana_str: str) -> kanas.Kana:
-#     pass
+# TODO: now we have two types of formation:
+# 1. (surface-syllablestr)
+# 2. (surface-syllable)s
+# It seems that 2 is impossible due to jukujikun (熟字訓)
+# TODO: collection of syllablestrs???
 
 
 class SyllableStr:
@@ -35,6 +37,14 @@ class SyllableStr:
     def extend(self, syllablestr: SyllableStr) -> None:
         # TODO: support string?
         return SyllableStr(syllables=self.syllables+syllablestr.syllables)
+
+    @property
+    def start_gyou(self) -> kanas.Gyou:
+        return self[0].gyou
+
+    @property
+    def end_dan(self) -> kanas.Dan:
+        return self[-1].dan
 
     # def startswith_kana(self):  # TODO: isn't this a waste word?
     #     pass
