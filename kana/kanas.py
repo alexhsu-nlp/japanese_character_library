@@ -27,13 +27,8 @@ class JapaneseCharacter(Character):
     pass
 
 
-# Needs refactoring the ideas
-@dataclass
-class JapaneseString:
-    from kanastr import SyllableStr
-    surface: str
-    inner: JapaneseCharacter
-    pron: SyllableStr
+class JapaneseUnit:
+    pass
 
 
 def is_same_type(kana1: Optional[BaseKana], kana2: Optional[BaseKana], allow_None=True):
@@ -41,7 +36,7 @@ def is_same_type(kana1: Optional[BaseKana], kana2: Optional[BaseKana], allow_Non
 
 
 @dataclass
-class Syllable(JapaneseCharacter):
+class Mora(JapaneseUnit):
     # core idea: a syllable consists of a kana and an optional sutegana; if the sutegana is "None", then blablabla
     # TODO: if you adopt this, then you need to face わぁぁぁあ
     # idea:
@@ -51,11 +46,11 @@ class Syllable(JapaneseCharacter):
     sutegana: Optional[Sutegana]
     # TODO: sutegana needs to have an original
     # TODO: distinguish katakana and hiragana suteganas
-    # NOTE: Syllable is ALWAYS SHORT (no long syllables)
+    # NOTE: Mora is ALWAYS SHORT (no long syllables)
 
     def __post_init__(self):
         # TODO: then this is done twice?
-        assert Syllable.is_valid_kana_sutegana_pair(
+        assert Mora.is_valid_kana_sutegana_pair(
             self.kana, self.sutegana) is True
 
         # assert is_same_type(self.kana, self.sutegana)
@@ -75,7 +70,7 @@ class Syllable(JapaneseCharacter):
         return True
 
     def __repr__(self):
-        return f'Syllable<{str(self)}>'
+        return f'Mora<{str(self)}>'
 
     def __str__(self):
         if self.sutegana is None:
@@ -85,14 +80,21 @@ class Syllable(JapaneseCharacter):
         return self.kana.symbol + self.sutegana.symbol
 
     @property
-    def pron(self) -> Syllable:
-        # TODO: pron of katakanas and kanjis and etc. together?
-        pass
+    def pron(self):  # should be all hiragana
+        if self.sutegana is None:
+            return self.kana.pron.symbol
+        elif self.kana is None:
+            return self.sutegana.pron.symbol
+        return self.kana.pron.symbol + self.sutegana.pron.symbol
 
     @property
-    def dakuon(self) -> Syllable:
-        # TODO: I think this is overly costly, perhaps make a syllable pool
-        return Syllable(kana=self.kana.dakuon, sutegana=self.sutegana)
+    def dakuon(self) -> Mora:
+        # TODO: I think this is overly costly, perhaps make a mora pool
+        return Mora(kana=self.kana.dakuon, sutegana=self.sutegana)
+    
+    @property
+    def handakuon(self) -> Mora:
+        return Mora(kana=self.kana.handakuon, sutegana=self.sutegana)
 
     def can_sokuonize(self) -> bool:
         return self.sutegana is None and self.kana.can_sokuonize()
@@ -113,7 +115,7 @@ class Syllable(JapaneseCharacter):
 
     def change_dan(self, dan: Union[Dan, str]):
         assert self.sutegana is None  # TODO: solve this
-        return Syllable(kana=self.kana.change_dan(dan=dan), sutegana=self.sutegana)
+        return Mora(kana=self.kana.change_dan(dan=dan), sutegana=self.sutegana)
 
     # def check(self) -> bool:
     #     if self.kana is None:
@@ -129,7 +131,7 @@ class Syllable(JapaneseCharacter):
     #     return True
 
     def __eq__(self, other):
-        return isinstance(other, Syllable) and self.kana == other.kana and self.sutegana == other.sutegana
+        return isinstance(other, Mora) and self.kana == other.kana and self.sutegana == other.sutegana
 
 
 class Kanji(JapaneseCharacter):
@@ -251,6 +253,22 @@ class Kana(BaseKana):
             return self
             # raise NotImplementedError
         return kana_gyoudan_dict[self.gyou.rev_dakuon.symbol, self.dan.symbol][self._gyoudan_dict_index]
+    
+    @cached_property
+    def han_dakuon(self) -> Kana:
+        if self._gyoudan_dict_index is None:
+            # TODO: this may be erratic
+            return self
+            # raise NotImplementedError
+        return kana_gyoudan_dict[self.gyou.handakuon.symbol, self.dan.symbol][self._gyoudan_dict_index]
+    
+    @cached_property
+    def rev_han_dakuon(self) -> Kana:
+        if self._gyoudan_dict_index is None:
+            # TODO: this may be erratic
+            return self
+            # raise NotImplementedError
+        return kana_gyoudan_dict[self.gyou.rev_handakuon.symbol, self.dan.symbol][self._gyoudan_dict_index]
 
     # def is_hatsuon(self) -> bool:
     #     return False
@@ -305,7 +323,15 @@ class Gyou(BaseKana):
 
     @property
     def handakuon(self) -> Kana:
-        return kana_dict[self._dakuon]
+        if self.symbol != 'は':
+            return self
+        return Gyou(symbol='ぱ')
+    
+    @property
+    def rev_handakuon(self) -> Kana:
+        if self.symbol != 'ぱ':
+            return self
+        return Gyou(symbol='は')
 
     @property
     def rev_dakuon(self) -> Kana:
@@ -490,13 +516,13 @@ for consonant, row in const.SUTEGANA_KATAS.items():
                                                    )
 
 
-def char2syllable(char: str) -> Syllable:
-    'converts a valid char into syllable'
+def char2mora(char: str) -> Mora:
+    'converts a valid char into mora'
     assert len(char) <= 2 and len(char) >= 1
     # TODO: sutegana dict
     if len(char) == 1:
         sutegana = None
     else:
         sutegana = SUTEGANA_DICT[char[1]]
-    return Syllable(
+    return Mora(
         kana=KANA_DICT[char[0]], sutegana=sutegana)

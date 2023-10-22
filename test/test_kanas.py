@@ -1,5 +1,5 @@
 from kana import kanas
-from kana import kanastr
+from kana import morastr
 
 # TODO: what do i want to achieve for this library?
 # 1. a sentence of kana in kana objects
@@ -136,7 +136,7 @@ class TestKanaDict:
 
 class TestSuteganas:
     pass
-    # TODO: now these should be put into syllables checking
+    # TODO: now these should be put into moras checking
     # NOTE: all the youon's are not sukuonizable except じゅう (十) e.g. in じっぷん [what about 入 sometimes にっ?]
     # NOTE: to consider 歴史的仮名遣い, the previous kana can be affected to have youon!!!
     # def test_sutegana_hira_sha(self):

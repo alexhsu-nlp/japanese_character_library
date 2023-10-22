@@ -1,12 +1,12 @@
-from kana import kanas, kanastr
-from kana.str2syllablestr import str2syllablestr
+from kana import kanas, morastr
+from kana.str2mora import str2morastr
 import pytest
 
 
 class TestStr2Syllables:
 
     @pytest.mark.parametrize(
-        'string,str_result,syllable_size',
+        'string,str_result,mora_size',
         [
             ('わたしのことは', 'わたしのことは', 7),
             ('きょうかいせん', 'きょうかいせん', 6),
@@ -20,31 +20,31 @@ class TestStr2Syllables:
         ]
 
     )
-    def test_eval(self, string: str, str_result: str, syllable_size: int):
-        result = str2syllablestr(string)
+    def test_eval(self, string: str, str_result: str, mora_size: int):
+        result = str2morastr(string)
         assert str(result) == str_result
-        assert len(result) == syllable_size
+        assert len(result) == mora_size
 
     def test7(self):
-        result = str2syllablestr('がっこうであったこわいはなし')
+        result = str2morastr('がっこうであったこわいはなし')
         assert len(result) == 14
 
     def test8(self):
-        result = str2syllablestr('ハート')
+        result = str2morastr('ハート')
         assert len(result) == 3
         assert str(result) == 'ハアト'
 
     def test9(self):
-        result = str2syllablestr('ファックス')
+        result = str2morastr('ファックス')
         assert len(result) == 4
         assert str(result) == 'ファックス'
 
     def test10(self):
-        result = str2syllablestr('つゞく')
+        result = str2morastr('つゞく')
         assert len(result) == 3
         assert str(result) == 'つづく'
 
     def test10(self):
-        result = str2syllablestr('たゝく')
+        result = str2morastr('たゝく')
         assert len(result) == 3
         assert str(result) == 'たたく'
