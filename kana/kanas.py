@@ -91,7 +91,7 @@ class Mora(JapaneseUnit):
     def dakuon(self) -> Mora:
         # TODO: I think this is overly costly, perhaps make a mora pool
         return Mora(kana=self.kana.dakuon, sutegana=self.sutegana)
-    
+
     @property
     def handakuon(self) -> Mora:
         return Mora(kana=self.kana.handakuon, sutegana=self.sutegana)
@@ -116,6 +116,14 @@ class Mora(JapaneseUnit):
     def change_dan(self, dan: Union[Dan, str]):
         assert self.sutegana is None  # TODO: solve this
         return Mora(kana=self.kana.change_dan(dan=dan), sutegana=self.sutegana)
+
+    @property
+    def hiragana(self):
+        return Mora(kana=self.kana.hiragana, sutegana=self.sutegana.hiragana)
+
+    @property
+    def katakana(self):
+        return Mora(kana=self.kana.katakana, sutegana=self.sutegana.katakana)
 
     # def check(self) -> bool:
     #     if self.kana is None:
@@ -165,6 +173,14 @@ class BaseKana:
 
     def is_katakana(self) -> bool:
         return False
+    
+    @property
+    def hiragana(self) -> Hiragana:
+        raise NotImplementedError
+
+    @property
+    def katakana(self) -> Katakana:
+        raise NotImplementedError
 
     # def to_romaji(self) -> Romaji:
     #     # TODO: 3 kinds
@@ -253,7 +269,7 @@ class Kana(BaseKana):
             return self
             # raise NotImplementedError
         return kana_gyoudan_dict[self.gyou.rev_dakuon.symbol, self.dan.symbol][self._gyoudan_dict_index]
-    
+
     @cached_property
     def han_dakuon(self) -> Kana:
         if self._gyoudan_dict_index is None:
@@ -261,7 +277,7 @@ class Kana(BaseKana):
             return self
             # raise NotImplementedError
         return kana_gyoudan_dict[self.gyou.handakuon.symbol, self.dan.symbol][self._gyoudan_dict_index]
-    
+
     @cached_property
     def rev_han_dakuon(self) -> Kana:
         if self._gyoudan_dict_index is None:
@@ -326,7 +342,7 @@ class Gyou(BaseKana):
         if self.symbol != 'は':
             return self
         return Gyou(symbol='ぱ')
-    
+
     @property
     def rev_handakuon(self) -> Kana:
         if self.symbol != 'ぱ':

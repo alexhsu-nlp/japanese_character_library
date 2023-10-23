@@ -5,6 +5,8 @@ from typing import Union, List, Tuple, Dict, Sequence, Set, Optional
 from kana.kanas import KANA_DICT, Hiragana, Katakana, Gyou, Dan, Kana, JapaneseCharacter, SUTEGANAS, JapaneseUnit
 from kana.morastr import MoraStr, SequenceContainer
 from kana.str2mora import str2morastr
+from pathlib import Path
+
 
 # TODO: incorporate Yomis into Kanjis
 
@@ -15,7 +17,7 @@ from kana.str2mora import str2morastr
 class JapaneseCharRecord:
     surface: str
     inner: JapaneseUnit  # JointKanjiJukugo or Mora (normalized)
-    pron: MoraStr  # this pron is unique, NOT A SET
+    pron: MoraStr  # TODO: since JapaneseUnit already has pron this is not needed?
     strict: bool  # whether the pronunciation has basis
 
 
@@ -30,8 +32,11 @@ class JapaneseCharRecordStr(SequenceContainer):
 @dataclass(frozen=True)
 class JointKanjiJukugo(JapaneseUnit):
     # Idea: call the characters (kanas, suteganas, symbols) characters, and call combined ones (moras, etc.) `units`
-    symbol: str
-    pron: MoraStr
+    kanjis: List[Kanji]
+    pron: Optional[MoraStr] = None
+
+    def __str__(self):
+        return "".join(map(lambda kanji: kanji.symbol, self.kanjis))
 
 
 @dataclass
@@ -184,7 +189,12 @@ class KanjiDic2KunyomiNonVerb(KanjiDic2Kunyomi):
     @property
     def pron_set(self) -> Set[MoraStr]:
         # NOTE: this is a set of pronunciations derivable from the given yomi, such as たかい => だかい.
-        return {self.main, self.main.dakuonize(), self.normal, self.main.dakuonize(), self.main.handakuonize(), self.normal.handakuonize()}
+        return {self.main,
+                self.main.dakuonize(),
+                self.normal,
+                self.main.dakuonize(),
+                self.main.handakuonize(),
+                self.normal.handakuonize()}
 
 
 @dataclass
@@ -196,7 +206,12 @@ class KanjiDic2Onyomi(KanjiDic2Yomi):
     @property
     def pron_set(self) -> Set[MoraStr]:
         # NOTE: this is a set of pronunciations derivable from the given yomi, such as たかい => だかい.
-        return {self.main, self.main.dakuonize(), self.main.sokuonize(), self.main.dakuonize().sokuonize(), self.main.handakuonize(), self.main.handakuonize().sokuonize()}
+        return {self.main,
+                self.main.dakuonize(),
+                self.main.sokuonize(),
+                self.main.dakuonize().sokuonize(),
+                self.main.handakuonize(),
+                self.main.handakuonize().sokuonize()}
 
 
 class KanjiDic2Nanori(KanjiDic2Yomi):
@@ -226,6 +241,34 @@ class KanjiDic2KanjiCollectedYomi(Yomi):
         for verb in self._yomis_all:
             pron_set.union(verb.pron_set)
         return pron_set
+
+
+def _get_kanjidic2_dict() -> Dict[str, Kanji]:
+    import time
+    from xml.etree.ElementTree import ElementTree
+
+    start = time.time()
+
+    kanji_dict: Dict[str, Kanji] = {}
+    KANJIDIC_PATH_STR = Path("kanjidic2/kanjidic2.xml")
+
+    kanjidic_root = ElementTree().parse(KANJIDIC_PATH_STR)
+    for character in kanjidic_root.findall("character"):
+        kanji = character.find("literal").text
+        # TODO: 1. kata2hira, hira2kata
+        # 2. identify verb or n verb for `.` items
+        # NOTE: kuns are hiraganas, ons are katakanas
+
+        # onyomis = [jaconv.kata2hira(onyomi.text) for onyomi in character.findall(
+        #     './/reading[@r_type="ja_on"]')]
+        # kunyomis = [kunyomi.text for kunyomi in character.findall(
+        #     './/reading[@r_type="ja_kun"]')]
+        # nanoris = [nanori.text for nanori in character.findall(
+        #     './/nanori')]
+        # kanji_yomi = KanjiDic2KanjiCollectedYomi(kanji=kanji, onyomis=onyomis,
+        #                                          kunyomis=kunyomis, nanoris=nanoris)
+        # char_dict[kanji] = kanji_yomi
+    return kanji_dict
 
 # # TODO: 3. problem of changing sound in onyomi [3 possible sounds] [ki.ku.ti.tu] [hatuonbin]
 # # TODO: 4. problem of changing sound in kunyomi

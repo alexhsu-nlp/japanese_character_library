@@ -1,6 +1,6 @@
 ## the Japanese Character Library Project
 
-Current status: Developing (incomplete; a basic version is planned be done before 2023.10.24 11:30 a.m. CST.) 
+Current status: Developing (incomplete; a basic version is planned be done before 2023.10.26) 
 
 This is an extension of my NLP course project done in CUHK(SZ) in 2023.
 
