@@ -79,6 +79,9 @@ class Mora(JapaneseUnit):
             return self.sutegana.symbol
         return self.kana.symbol + self.sutegana.symbol
 
+    def __hash__(self):
+        return hash(tuple([self.kana, self.sutegana]))
+
     @property
     def pron(self):  # should be all hiragana
         if self.sutegana is None:
@@ -152,6 +155,9 @@ class BaseKana:
         self.symbol: str = symbol
         self._is_dakuon = False
         # self.base_romaji = romaji
+
+    def __hash__(self) -> int:
+        return hash((self.symbol,))
 
     @property
     def pron(self) -> Kana:

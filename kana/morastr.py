@@ -59,28 +59,8 @@ class MoraStr(SequenceContainer):
     def __str__(self) -> str:
         return "".join(map(str, self._container))
 
-    # def __len__(self) -> int:
-    #     return len(self.moras)
-
-    # def __eq__(self, other) -> bool:
-    #     assert isinstance(other, MoraStr)
-    #     return self.moras == other.moras
-
-    # def __getitem__(self, key):
-    #     if isinstance(key, int):
-    #         return self.moras[key]
-    #     elif isinstance(key, slice):
-    #         return MoraStr(moras=self.moras.__getitem__(key))
-    #     raise ValueError('invalid key of MoraStr')
-
-    # def add(self, mora: kanas.Mora) -> MoraStr:
-    #     # kana = safetyinnerwrapper_str2kana(kana)
-    #     return MoraStr(mora == self.moras+(mora,))
-
-    # def __add__(self, other) -> MoraStr:
-    #     # TODO: support string?
-    #     assert isinstance(other, MoraStr)
-    #     return MoraStr(moras=self.moras+other.moras)
+    def __hash__(self) -> int:
+        return hash(tuple(self._container))
 
     @property
     def start_gyou(self) -> kanas.Gyou:
@@ -95,14 +75,6 @@ class MoraStr(SequenceContainer):
         if len(self) == 0:
             return self  # TODO: should I copy it?
         return self[:-1].add(self[-1].change_dan(dan=dan))
-
-    # def startswith_kana(self):  # TODO: isn't this a waste word?
-    #     pass
-
-    # def endswith_kana(self, kana: Union[kanas.Kana, str]):
-    #     # TODO: support MoraStr and relaxed init
-    #     kana = safetyinnerwrapper_str2kana(kana)
-    #     return self.moras[-1] == kana
 
     def dakuonize(self) -> MoraStr:
         # TODO: good to be present here? (seems y!)
@@ -132,7 +104,3 @@ class MoraStr(SequenceContainer):
             return MoraStr(moras=self[:-1].add(kanas.Mora(kanas.KANA_DICT['っ'])))
         elif last_mora.kana.is_katakana():
             return MoraStr(moras=self[:-1].add(kanas.Mora(kanas.KANA_DICT['ッ'])))
-        # if last_kana.sukuonizable():
-        #     # TODO: this is only hiragana!!!
-        #     return MoraStr(moras=self.moras[:-1] + [kanas.KANA_DICT['っ']])
-        # return self
