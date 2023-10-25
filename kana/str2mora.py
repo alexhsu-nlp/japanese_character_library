@@ -100,3 +100,15 @@ def _get_inc_and_mora_case_kana(mora_info: MoraConstructionInfo) -> Tuple[int, k
             kana=kanas.KANA_DICT[mora_info.current_char], sutegana=None)
     return 1, kanas.Mora(
         kana=kanas.KANA_DICT[mora_info.current_char], sutegana=None)
+
+
+def morastr2hira(mora_str: morastr.MoraStr) -> morastr.MoraStr:
+    moras = [kanas.Mora(kana=mora.kana.hiragana,
+                        sutegana=mora.sutegana.hira) for mora in mora_str]
+    return morastr.MoraStr(moras=moras)
+
+
+def morastr2kata(mora_str: morastr.MoraStr) -> morastr.MoraStr:
+    moras = [kanas.Mora(kana=mora.kana.katakana,
+                        sutegana=mora.sutegana.kata) for mora in mora_str]
+    return morastr.MoraStr(moras=moras)

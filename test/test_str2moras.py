@@ -16,7 +16,11 @@ class TestStr2Syllables:
             ('ヴァイスシュヴァルツ', 'ヴァイスシュヴァルツ', 7),
             ('あっ', 'あっ', 2),  # TODO: actually this is not?
             ('バナヽ', 'バナナ', 3),
-            ('づゝ', 'づつ', 2)
+            ('づゝ', 'づつ', 2),
+            ('ハート', 'ハアト', 3),
+            ('ファックス', 'ファックス', 4),
+            ('つゞく', 'つづく', 3),
+            ('たゝく', 'たたく', 3),
         ]
 
     )
@@ -28,23 +32,3 @@ class TestStr2Syllables:
     def test7(self):
         result = str2morastr('がっこうであったこわいはなし')
         assert len(result) == 14
-
-    def test8(self):
-        result = str2morastr('ハート')
-        assert len(result) == 3
-        assert str(result) == 'ハアト'
-
-    def test9(self):
-        result = str2morastr('ファックス')
-        assert len(result) == 4
-        assert str(result) == 'ファックス'
-
-    def test10(self):
-        result = str2morastr('つゞく')
-        assert len(result) == 3
-        assert str(result) == 'つづく'
-
-    def test10(self):
-        result = str2morastr('たゝく')
-        assert len(result) == 3
-        assert str(result) == 'たたく'

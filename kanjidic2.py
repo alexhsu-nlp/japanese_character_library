@@ -2,9 +2,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import cached_property
 from typing import Union, List, Tuple, Dict, Sequence, Set, Optional
-from kana.kanas import KANA_DICT, Hiragana, Katakana, Gyou, Dan, Kana, JapaneseCharacter, SUTEGANAS, JapaneseUnit
+from kana.kanas import KANA_DICT, Hiragana, Katakana, Gyou, Dan, Kana, JapaneseCharacter, SUTEGANAS, JapaneseUnit, Mora
 from kana.morastr import MoraStr, SequenceContainer
-from kana.str2mora import str2morastr
+from kana.str2mora import str2morastr, morastr2hira, morastr2kata
 from pathlib import Path
 
 
@@ -226,6 +226,8 @@ class KanjiDic2KanjiCollectedYomi(Yomi):
     # TODO: should i get rid of the list?
     # TODO: transform when appropriate or in advance?
     # TODO: set or list?
+
+    # TODO: do you need to distinguish these two? Y?
     kunyomi_verbs: List[KanjiDic2KunyomiVerb]
     kunyomi_nonverbs: List[KanjiDic2KunyomiNonVerb]
     onyomis: List[KanjiDic2Onyomi]
@@ -243,6 +245,36 @@ class KanjiDic2KanjiCollectedYomi(Yomi):
         return pron_set
 
 
+@dataclass
+class KunyomiInfo:
+    main: MoraStr
+    tail: Optional[MoraStr]
+
+    def is_kunyomi_verb(self) -> bool:
+        if self.tail is None:
+            return False
+        final_mora: Mora = self.tail[-1]
+        return final_mora.sutegana is None and final_mora.kana.dan.symbol == 'う'
+
+
+def kunyomistr2yomi(kunyomi_str: str) -> KanjiDic2Kunyomi:
+    as_prefix = (kunyomi_str[0] == '-')
+    as_suffix = (kunyomi_str[-1] == '-')
+    kunyomi_str_strip = kunyomi_str.strip('-')
+    if '.' not in kunyomi_str_strip:
+        # TODO: did not pay attention to `as_prefix` and `as_suffix` in pron_set?
+        return KanjiDic2KunyomiNonVerb(main=kunyomi_str_strip, as_prefix=as_prefix, as_suffix=as_suffix, tail=None)
+    parts = kunyomi_str_strip.split('.')
+    assert len(parts) == 2
+    main_str, tail_str = parts
+    main = str2morastr(main_str)
+    tail = str2morastr(tail_str)
+    kunyomi_info = KunyomiInfo(main=main, tail=tail)
+    if kunyomi_info.is_kunyomi_verb():
+        return KanjiDic2KunyomiVerb(main=kunyomi_info.main, as_prefix=as_prefix, as_suffix=as_suffix, tail=kunyomi_info.tail)
+    return KanjiDic2KunyomiNonVerb(main=kunyomi_info.main, as_prefix=as_prefix, as_suffix=as_suffix, tail=kunyomi_info.tail)
+
+
 def _get_kanjidic2_dict() -> Dict[str, Kanji]:
     import time
     from xml.etree.ElementTree import ElementTree
@@ -254,21 +286,37 @@ def _get_kanjidic2_dict() -> Dict[str, Kanji]:
 
     kanjidic_root = ElementTree().parse(KANJIDIC_PATH_STR)
     for character in kanjidic_root.findall("character"):
-        kanji = character.find("literal").text
-        # TODO: 1. kata2hira, hira2kata
+        kanji_str = character.find("literal").text
+        assert kanji_str is not None
+        kanji_str
         # 2. identify verb or n verb for `.` items
         # NOTE: kuns are hiraganas, ons are katakanas
 
-        # onyomis = [jaconv.kata2hira(onyomi.text) for onyomi in character.findall(
-        #     './/reading[@r_type="ja_on"]')]
-        # kunyomis = [kunyomi.text for kunyomi in character.findall(
-        #     './/reading[@r_type="ja_kun"]')]
-        # nanoris = [nanori.text for nanori in character.findall(
-        #     './/nanori')]
+        onyomis = [KanjiDic2Onyomi(main=morastr2hira(str2morastr(onyomi_element.text))) for onyomi_element in character.findall(
+            './/reading[@r_type="ja_on"]')]
+        # TODO: sth special for kunyomi
+        kunyomis = [kunyomistr2yomi(kunyomi.text) for kunyomi in character.findall(
+            './/reading[@r_type="ja_kun"]')]
+        kunyomi_verbs = list(filter(lambda kunyomi: isinstance(
+            kunyomi, KanjiDic2KunyomiVerb), kunyomis))
+        kunyomi_nonverbs = list(filter(lambda kunyomi: isinstance(
+            kunyomi, KanjiDic2KunyomiNonVerb), kunyomis))
+
+        nanoris = [KanjiDic2Nanori(main=str2morastr(nanori.text)) for nanori in character.findall(
+            './/nanori')]
+        full_yomi = KanjiDic2KanjiCollectedYomi(
+            kunyomi_verbs=kunyomi_verbs, kunyomi_nonverbs=kunyomi_nonverbs,
+            onyomis=onyomis,
+            nanoris=nanoris
+        )
+        kanji_dict[kanji_str] = Kanji(symbol=kanji_str, yomi=full_yomi)
         # kanji_yomi = KanjiDic2KanjiCollectedYomi(kanji=kanji, onyomis=onyomis,
         #                                          kunyomis=kunyomis, nanoris=nanoris)
         # char_dict[kanji] = kanji_yomi
     return kanji_dict
+
+
+KANJI_DICT = _get_kanjidic2_dict()
 
 # # TODO: 3. problem of changing sound in onyomi [3 possible sounds] [ki.ku.ti.tu] [hatuonbin]
 # # TODO: 4. problem of changing sound in kunyomi

@@ -1,7 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Union, List, Tuple, Dict, Sequence, TypeVar, Generic
+from typing import Union, List, Tuple, Dict, Sequence, TypeVar, Generic, Iterable
 from typing_extensions import Self
 from kana import kanas
 
@@ -43,6 +43,9 @@ class SequenceContainer(Generic[T]):
         # TODO: support string?
         assert isinstance(other, self.__class__)
         return self.__class__(container=self._container + other._container)
+
+    def __iter__(self) -> Iterable[T]:
+        return self._container.__iter__()
 
 
 class MoraStr(SequenceContainer):
