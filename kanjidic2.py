@@ -289,10 +289,10 @@ def _get_kanjidic2_dict() -> Dict[str, Kanji]:
         kanji_str = character.find("literal").text
         assert kanji_str is not None
         kanji_str
+
         # 2. identify verb or n verb for `.` items
         # NOTE: kuns are hiraganas, ons are katakanas
-
-        onyomis = [KanjiDic2Onyomi(main=morastr2hira(str2morastr(onyomi_element.text))) for onyomi_element in character.findall(
+        onyomis = [KanjiDic2Onyomi(main=morastr2hira(str2morastr(onyomi_element.text.strip('-')))) for onyomi_element in character.findall(
             './/reading[@r_type="ja_on"]')]
         # TODO: sth special for kunyomi
         kunyomis = [kunyomistr2yomi(kunyomi.text) for kunyomi in character.findall(
@@ -302,7 +302,7 @@ def _get_kanjidic2_dict() -> Dict[str, Kanji]:
         kunyomi_nonverbs = list(filter(lambda kunyomi: isinstance(
             kunyomi, KanjiDic2KunyomiNonVerb), kunyomis))
 
-        nanoris = [KanjiDic2Nanori(main=str2morastr(nanori.text)) for nanori in character.findall(
+        nanoris = [KanjiDic2Nanori(main=str2morastr(nanori.text.replace('.', ''))) for nanori in character.findall(
             './/nanori')]
         full_yomi = KanjiDic2KanjiCollectedYomi(
             kunyomi_verbs=kunyomi_verbs, kunyomi_nonverbs=kunyomi_nonverbs,
@@ -310,13 +310,20 @@ def _get_kanjidic2_dict() -> Dict[str, Kanji]:
             nanoris=nanoris
         )
         kanji_dict[kanji_str] = Kanji(symbol=kanji_str, yomi=full_yomi)
-        # kanji_yomi = KanjiDic2KanjiCollectedYomi(kanji=kanji, onyomis=onyomis,
-        #                                          kunyomis=kunyomis, nanoris=nanoris)
-        # char_dict[kanji] = kanji_yomi
+
+    end = time.time()
+    time_lapse = round(end-start, 2)
+    print(f"KanjiDict2 loading done. Time taken: {time_lapse}s.")
+    # kanji_yomi = KanjiDic2KanjiCollectedYomi(kanji=kanji, onyomis=onyomis,
+    #                                          kunyomis=kunyomis, nanoris=nanoris)
+    # char_dict[kanji] = kanji_yomi
     return kanji_dict
 
 
 KANJI_DICT = _get_kanjidic2_dict()
+
+print('testing')
+print(KANJI_DICT['長'].yomi.pron_set)
 
 # # TODO: 3. problem of changing sound in onyomi [3 possible sounds] [ki.ku.ti.tu] [hatuonbin]
 # # TODO: 4. problem of changing sound in kunyomi

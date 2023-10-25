@@ -74,11 +74,13 @@ def _get_inc_and_mora_case_itersymbol(mora_info: MoraConstructionInfo, itersymbo
 
 def _get_inc_and_mora_case_sutegana(mora_info: MoraConstructionInfo) -> Tuple[int, kanas.Mora]:
     current_char = mora_info.current_char
-    assert mora_info.index >= 1 and current_char in kanas.SUTEGANA_DICT
+    # TODO: why assert this?
+    assert current_char in kanas.SUTEGANA_DICT
     # current char is a sutegana
     if current_char in ['っ', 'ッ']:
         return 1, kanas.Mora(
             kana=None, sutegana=kanas.SUTEGANA_DICT[current_char])
+    assert mora_info.index >= 1
     if mora_info.final_mora.sutegana is None:
         assert kanas.SUTEGANA_DICT[current_char].hiragana.symbol == mora_info.final_mora.kana.dan.symbol
         return 1, kanas.Mora(
@@ -103,12 +105,20 @@ def _get_inc_and_mora_case_kana(mora_info: MoraConstructionInfo) -> Tuple[int, k
 
 
 def morastr2hira(mora_str: morastr.MoraStr) -> morastr.MoraStr:
-    moras = [kanas.Mora(kana=mora.kana.hiragana,
-                        sutegana=mora.sutegana.hira) for mora in mora_str]
+    moras = []
+    for mora in moras:
+        assert isinstance(mora, kanas.Mora)
+        kana = mora.kana.hiragana if mora.kana is not None else None
+        sutegana = mora.sutegana.hira if mora.sutegana is not None else None
+        moras.append(mora)
     return morastr.MoraStr(moras=moras)
 
 
 def morastr2kata(mora_str: morastr.MoraStr) -> morastr.MoraStr:
-    moras = [kanas.Mora(kana=mora.kana.katakana,
-                        sutegana=mora.sutegana.kata) for mora in mora_str]
+    moras = []
+    for mora in moras:
+        assert isinstance(mora, kanas.Mora)
+        kana = mora.kana.katakana if mora.kana is not None else None
+        sutegana = mora.sutegana.kata if mora.sutegana is not None else None
+        moras.append(mora)
     return morastr.MoraStr(moras=moras)

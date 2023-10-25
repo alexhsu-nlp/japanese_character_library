@@ -56,8 +56,8 @@ KATAKANAS = tuple(KATAKANA_DICT.values())
 SUTEGANA_HIRAS: Dict[str, Tuple[Optional[str], ...]] = {
     '':  ('ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ'),
     'y': ('ゃ', None, 'ゅ', None, 'ょ'),
-    'w': ('ゎ'),
-    '?': ('っ'),
+    'w': ('ゎ',),
+    '?': ('っ',),
 }
 
 SUTEGANA_KATAS: Dict[str, Tuple[Optional[str], ...]] = {

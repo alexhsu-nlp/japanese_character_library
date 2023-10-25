@@ -31,7 +31,8 @@ class SequenceContainer(Generic[T]):
         if isinstance(key, int):
             return self._container[key]
         elif isinstance(key, slice):
-            return self.__class__(container=self._container.__getitem__(key))
+            # TODO: this may be buggy in the future
+            return self.__class__(self._container.__getitem__(key))
         raise NotImplementedError
 
     def add(self, element: T) -> Self:
@@ -42,7 +43,7 @@ class SequenceContainer(Generic[T]):
     def __add__(self, other) -> Self:
         # TODO: support string?
         assert isinstance(other, self.__class__)
-        return self.__class__(container=self._container + other._container)
+        return self.__class__(self._container + other._container)
 
     def __iter__(self) -> Iterable[T]:
         return self._container.__iter__()
@@ -106,12 +107,12 @@ class MoraStr(SequenceContainer):
     def dakuonize(self) -> MoraStr:
         # TODO: good to be present here? (seems y!)
         assert len(self) > 0
-        return MoraStr(kanas=[self[0].dakuon]+self[1:])
+        return MoraStr(moras=[self[0].dakuon]+list(self[1:]))
 
     def handakuonize(self) -> MoraStr:
         # TODO: good to be present here? (seems y!)
         assert len(self) > 0
-        return MoraStr(kanas=[self[0].handakuon]+self[1:])
+        return MoraStr(moras=[self[0].handakuon]+list(self[1:]))
 
     def can_sokuonize(self) -> bool:
         if self[-1].can_sokuonize():
@@ -133,5 +134,5 @@ class MoraStr(SequenceContainer):
             return MoraStr(moras=self[:-1].add(kanas.Mora(kanas.KANA_DICT['ッ'])))
         # if last_kana.sukuonizable():
         #     # TODO: this is only hiragana!!!
-        #     return MoraStr(kanas=self.moras[:-1] + [kanas.KANA_DICT['っ']])
+        #     return MoraStr(moras=self.moras[:-1] + [kanas.KANA_DICT['っ']])
         # return self

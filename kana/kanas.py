@@ -159,6 +159,8 @@ class BaseKana:
 
     @property
     def handakuon(self) -> Kana:
+        # print("HANDAKUON")
+        # print(self)
         raise NotImplementedError
 
     @cached_property
@@ -173,7 +175,7 @@ class BaseKana:
 
     def is_katakana(self) -> bool:
         return False
-    
+
     @property
     def hiragana(self) -> Hiragana:
         raise NotImplementedError
@@ -199,6 +201,9 @@ class Sutegana(BaseKana):
         else:
             self._hiragana = None
             self._katakana = None
+
+    def __repr__(self) -> str:
+        return f"Sutegana<{self.symbol}>"
 
     @property
     def dan(self) -> Dan:
@@ -246,7 +251,6 @@ class Kana(BaseKana):
     @cached_property
     def pron(self) -> Kana:
         # pron_str = HIRA_SPECIAL_READINGS.get(self.symbol, self.symbol)
-        print('str:', type(self._pron_str))
         if self._pron_str == "":
             # TODO: this may not be a good idea
             # TODO: convert katakana to hiragana
@@ -271,7 +275,7 @@ class Kana(BaseKana):
         return kana_gyoudan_dict[self.gyou.rev_dakuon.symbol, self.dan.symbol][self._gyoudan_dict_index]
 
     @cached_property
-    def han_dakuon(self) -> Kana:
+    def handakuon(self) -> Kana:
         if self._gyoudan_dict_index is None:
             # TODO: this may be erratic
             return self
@@ -515,6 +519,7 @@ for kana in kana_dict.values():
 #     return Kana(symbol=bikana_str, gyou=Gyou(symbol=head_kana), dan=Dan(symbol=dan_kana))
 
 # Make sutegana dictionary
+
 SUTEGANA_DICT: Dict[str, Sutegana] = {}
 for consonant, row in const.SUTEGANA_HIRAS.items():
     for i, sutegana in enumerate(row):
