@@ -105,11 +105,11 @@ def _get_inc_and_mora_case_kana(mora_info: MoraConstructionInfo) -> Tuple[int, k
 
 
 def morastr2hira(mora_str: morastr.MoraStr) -> morastr.MoraStr:
-    moras = []
-    for mora in moras:
+    moras: List[kanas.Mora] = []
+    for mora in mora_str:
         assert isinstance(mora, kanas.Mora)
         kana = mora.kana.hiragana if mora.kana is not None else None
-        sutegana = mora.sutegana.hira if mora.sutegana is not None else None
+        sutegana = mora.sutegana.hiragana if mora.sutegana is not None else None
         moras.append(mora)
     return morastr.MoraStr(moras=moras)
 
