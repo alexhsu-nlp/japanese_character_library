@@ -91,7 +91,7 @@ class MoraStr(SequenceContainer):
 
     def can_sokuonize(self) -> bool:
         if self[-1].can_sokuonize():
-            if self[-1].kana.symbol in ['う', 'ウ'] and self[-1].sutegana.symbol not in ['ゅ', 'ユ']:
+            if len(self) >= 2 and self[-1].kana.symbol in ['う', 'ウ'] and self[-2].sutegana.symbol not in ['ゅ', 'ユ']:
                 # TODO: じっ, にっ
                 return False
             return True
@@ -99,7 +99,9 @@ class MoraStr(SequenceContainer):
 
     def sokuonize(self) -> MoraStr:
         # TODO: should I make this a binary stuff?
-        assert self.can_sokuonize()
+        # assert self.can_sokuonize()
+        if not self.can_sokuonize():
+            return self
         assert len(self) > 0
         last_mora: kanas.Mora = self[-1]
         if last_mora.kana.is_hiragana():

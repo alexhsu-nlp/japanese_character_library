@@ -127,7 +127,7 @@ class KanjiDic2Kunyomi(KanjiDic2Yomi):
     def __str__(self):
         if self.tail is not None:
             # TODO: self.tail should be MoraStr
-            tail_part = '.' + self.tail
+            tail_part = '.' + str(self.tail)
         else:
             tail_part = ''
         return f"{'-' if self.as_suffix else ''}{self.main}{tail_part}{'-' if self.as_prefix else ''}"
@@ -201,7 +201,7 @@ class KanjiDic2KunyomiNonVerb(KanjiDic2Kunyomi):
 class KanjiDic2Onyomi(KanjiDic2Yomi):
 
     def __str__(self):
-        return self.main
+        return str(self.main)
 
     @property
     def pron_set(self) -> Set[MoraStr]:
@@ -241,7 +241,8 @@ class KanjiDic2KanjiCollectedYomi(Yomi):
     def pron_set(self) -> Set[MoraStr]:
         pron_set: Set[MoraStr] = set()
         for verb in self._yomis_all:
-            pron_set.union(verb.pron_set)
+            # print('in verb:', verb, verb.pron_set)
+            pron_set = pron_set.union(verb.pron_set)
         return pron_set
 
 
@@ -324,6 +325,7 @@ KANJI_DICT = _get_kanjidic2_dict()
 
 print('testing')
 print(KANJI_DICT['長'].yomi)
+print('---')
 print(KANJI_DICT['長'].yomi.pron_set)
 
 # # TODO: 3. problem of changing sound in onyomi [3 possible sounds] [ki.ku.ti.tu] [hatuonbin]
