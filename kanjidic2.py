@@ -162,7 +162,7 @@ class KanjiDic2KunyomiVerb(KanjiDic2Kunyomi):
         return not self.is_ichidan()
 
     def is_ichidan(self) -> bool:
-        return len(self.tail) >= 2 and self.tail[-1].sutegana is None and self.tail[-1].kana.symbol == KANA_DICT['る'] and self.tail[-2].dan.symbol in ('え', 'い')
+        return len(self.tail) >= 2 and self.tail[-1].sutegana is None and self.tail[-1].kana == KANA_DICT['る'] and self.tail[-2].dan.symbol in ('え', 'い')
 
     @property
     def renyou(self) -> MoraStr:
@@ -324,9 +324,8 @@ def _get_kanjidic2_dict() -> Dict[str, Kanji]:
 KANJI_DICT = _get_kanjidic2_dict()
 
 print('testing')
-print(KANJI_DICT['長'].yomi)
-print('---')
 print(KANJI_DICT['長'].yomi.pron_set)
+print(KANJI_DICT['引'].yomi.pron_set)
 
 # # TODO: 3. problem of changing sound in onyomi [3 possible sounds] [ki.ku.ti.tu] [hatuonbin]
 # # TODO: 4. problem of changing sound in kunyomi

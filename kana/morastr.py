@@ -36,9 +36,9 @@ class SequenceContainer(Generic[T]):
         raise NotImplementedError
 
     def add(self, element: T) -> Self:
-        assert isinstance(element, T)
+        # assert isinstance(element, T)
         # kana = safetyinnerwrapper_str2kana(kana)
-        return self.__class__(container=self._container + (element,))
+        return self.__class__(self._container + (element,))
 
     def __add__(self, other) -> Self:
         # TODO: support string?
