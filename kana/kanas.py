@@ -199,6 +199,8 @@ class Sutegana(BaseKana):
 
     def __init__(self, symbol: str, _consonant: str, _ord: Optional[int]):
         super().__init__(symbol)
+        self._consonant = _consonant
+        self._ord = _ord if _ord is not None else 0
         if _ord is not None:
             hira_str = const.HIRAGANA_DICT[_consonant][_ord]
             kata_str = const.KATAKANA_DICT[_consonant][_ord]
@@ -222,6 +224,14 @@ class Sutegana(BaseKana):
     @property
     def katakana(self) -> Katakana:
         return self._katakana
+
+    @property
+    def sutegana_hira(self) -> SuteganaHira:
+        return SUTEGANA_DICT[const.SUTEGANA_HIRAS[self._consonant][self._ord]]
+
+    @property
+    def sutegana_kata(self) -> SuteganaKata:
+        return SUTEGANA_DICT[const.SUTEGANA_KATAS[self._consonant][self._ord]]
 
     # TODO: in fact nothing can be done about this?
     # @property
@@ -389,7 +399,7 @@ class Hiragana(Kana):
 
     def __eq__(self, other):
         return isinstance(other, Hiragana) and self.symbol == other.symbol
-    
+
     def __hash__(self) -> int:
         return hash((self.symbol, self._katakana, self._pron_str))
 

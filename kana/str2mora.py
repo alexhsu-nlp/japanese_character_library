@@ -109,8 +109,9 @@ def morastr2hira(mora_str: morastr.MoraStr) -> morastr.MoraStr:
     for mora in mora_str:
         assert isinstance(mora, kanas.Mora)
         kana = mora.kana.hiragana if mora.kana is not None else None
-        sutegana = mora.sutegana.hiragana if mora.sutegana is not None else None
-        moras.append(mora)
+        sutegana = mora.sutegana.sutegana_hira if mora.sutegana is not None else None
+        # TODO: hira version of sutegana
+        moras.append(kanas.Mora(kana=kana, sutegana=sutegana))
     return morastr.MoraStr(moras=moras)
 
 
