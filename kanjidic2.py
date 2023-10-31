@@ -218,7 +218,7 @@ class KanjiDic2Nanori(KanjiDic2Yomi):
 
     @property
     def pron_set(self) -> Set[MoraStr]:
-        return {self.main, self.main.dakuonize()}
+        return {self.main, self.main.dakuonize(), self.main.handakuonize()}
 
 
 @dataclass
