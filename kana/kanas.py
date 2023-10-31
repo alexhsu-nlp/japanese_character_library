@@ -389,6 +389,9 @@ class Hiragana(Kana):
 
     def __eq__(self, other):
         return isinstance(other, Hiragana) and self.symbol == other.symbol
+    
+    def __hash__(self) -> int:
+        return hash((self.symbol, self._katakana, self._pron_str))
 
 
 class Katakana(Kana):

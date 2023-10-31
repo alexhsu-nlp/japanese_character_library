@@ -263,7 +263,7 @@ def kunyomistr2yomi(kunyomi_str: str) -> KanjiDic2Kunyomi:
     kunyomi_str_strip = kunyomi_str.strip('-')
     if '.' not in kunyomi_str_strip:
         # TODO: did not pay attention to `as_prefix` and `as_suffix` in pron_set?
-        return KanjiDic2KunyomiNonVerb(main=kunyomi_str_strip, as_prefix=as_prefix, as_suffix=as_suffix, tail=None)
+        return KanjiDic2KunyomiNonVerb(main=str2morastr(kunyomi_str_strip), as_prefix=as_prefix, as_suffix=as_suffix, tail=None)
     parts = kunyomi_str_strip.split('.')
     assert len(parts) == 2
     main_str, tail_str = parts
@@ -323,6 +323,7 @@ def _get_kanjidic2_dict() -> Dict[str, Kanji]:
 KANJI_DICT = _get_kanjidic2_dict()
 
 print('testing')
+print(KANJI_DICT['長'].yomi)
 print(KANJI_DICT['長'].yomi.pron_set)
 
 # # TODO: 3. problem of changing sound in onyomi [3 possible sounds] [ki.ku.ti.tu] [hatuonbin]

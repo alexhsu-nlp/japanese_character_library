@@ -56,6 +56,9 @@ class MoraStr(SequenceContainer):
         super().__init__(container=moras)
         # self.moras: Tuple[kanas.Mora] = tuple(moras)
 
+    def __repr__(self) -> str:
+        return f"MoraStr<{self}>"
+
     def __str__(self) -> str:
         return "".join(map(str, self._container))
 
