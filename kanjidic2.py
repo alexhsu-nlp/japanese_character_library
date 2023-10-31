@@ -326,6 +326,9 @@ KANJI_DICT = _get_kanjidic2_dict()
 print('testing')
 print(KANJI_DICT['長'].yomi.pron_set)
 print(KANJI_DICT['引'].yomi.pron_set)
+print(KANJI_DICT['暗'].yomi.pron_set)
+print(KANJI_DICT['白'].yomi.pron_set)
+print(KANJI_DICT['翔'].yomi.pron_set)
 
 # # TODO: 3. problem of changing sound in onyomi [3 possible sounds] [ki.ku.ti.tu] [hatuonbin]
 # # TODO: 4. problem of changing sound in kunyomi

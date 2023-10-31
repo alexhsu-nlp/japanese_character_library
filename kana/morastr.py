@@ -106,6 +106,6 @@ class MoraStr(SequenceContainer):
         last_mora: kanas.Mora = self[-1]
         if last_mora.kana.is_hiragana():
             # TODO: remove hardcoding
-            return MoraStr(moras=self[:-1].add(kanas.Mora(kanas.KANA_DICT['っ'])))
+            return MoraStr(moras=self[:-1].add(kanas.Mora(kana=None, sutegana=kanas.SUTEGANA_DICT['っ'])))
         elif last_mora.kana.is_katakana():
-            return MoraStr(moras=self[:-1].add(kanas.Mora(kanas.KANA_DICT['ッ'])))
+            return MoraStr(moras=self[:-1].add(kanas.Mora(kana=None, sutegana=kanas.SUTEGANA_DICT['ッ'])))
