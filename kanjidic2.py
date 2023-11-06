@@ -4,7 +4,7 @@ from functools import cached_property
 from typing import Union, List, Tuple, Dict, Sequence, Set, Optional
 from kana.kanas import KANA_DICT, Hiragana, Katakana, Gyou, Dan, Kana, JapaneseCharacter, SUTEGANAS, JapaneseUnit, Mora
 from kana.morastr import MoraStr, SequenceContainer
-from kana.str2mora import str2morastr, morastr2hira, morastr2kata
+from kana.str2mora import str2morastr, morastr2hira, morastr2kata, MoraConstructionInfo
 from pathlib import Path
 
 
@@ -332,3 +332,20 @@ print(KANJI_DICT['翔'].yomi.pron_set)
 
 # # TODO: 3. problem of changing sound in onyomi [3 possible sounds] [ki.ku.ti.tu] [hatuonbin]
 # # TODO: 4. problem of changing sound in kunyomi
+
+
+@dataclass
+class StrWithPron:
+    str: str
+    pron: str
+
+
+def str2record(string: StrWithPron) -> JapaneseCharRecord:
+    # TODO: dynamic programming
+    # Tentative pesudocoode Algorithm:
+    # for each character:
+    #     if it is a kanji:
+    #        include it in present kanji flow
+    #
+    MoraConstructionInfo(string=string)
+    pass
